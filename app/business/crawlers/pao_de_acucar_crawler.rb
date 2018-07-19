@@ -8,8 +8,8 @@ module Crawlers
     PAO_DE_ACUCAR_HOME_URL = 'https://api.gpa.digital/pa/detail/categories?storeId=501&split=&showSub=true'.freeze
     PAO_DE_ACUCAR_BASE_URL = 'https://api.gpa.digital/pa/products/list'.freeze
 
-    # Pass 10k to the qty, I dont belive a category has more than 10k items
-    PAO_DE_ACUCAR_QUERY_STRING = '?storeId=501&qt=10000&s=&ftr=&p=1&rm=&gt=list&isClienteMais=false'.freeze
+    # 36 is the maximun page size the api allows
+    PAO_DE_ACUCAR_QUERY_STRING = '?storeId=501&qt=36&s=&ftr=&rm=&gt=list&isClienteMais=false'.freeze
 
     require 'nokogiri'
     require 'open-uri'
@@ -17,6 +17,9 @@ module Crawlers
     class << self
       def execute
         @products = []
+        last_page = false
+        page = 0
+
         home = JSON.parse(Nokogiri::HTML(open(PAO_DE_ACUCAR_HOME_URL)))
         # Get all catergories links
         links = home['content'].map { |category| category['link'] }
@@ -24,18 +27,25 @@ module Crawlers
         # Visit all caterories
         links.each do |link|
           begin
-            debugger
             puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
-            category = JSON.parse(Nokogiri::HTML(open("#{PAO_DE_ACUCAR_BASE_URL}#{link}#{PAO_DE_ACUCAR_QUERY_STRING}")))
 
-            # Loop the first products
-            loop_through_category(category)
+            until last_page
+              category = JSON.parse(Nokogiri::HTML(open("#{PAO_DE_ACUCAR_BASE_URL}#{link}#{PAO_DE_ACUCAR_QUERY_STRING}&p=#{page}")))
+              # Loop the first products
+              loop_through_category(category)
+
+              page += 1
+              last_page = category['content']['last']
+            end
           rescue
             puts "Erro! Vida que segue!"
           end
+
+          page = 0
         end
 
-        Product.create!(@products)
+        all_products = @products.uniq
+        Product.create!(all_products)
       end
 
       private
@@ -43,9 +53,9 @@ module Crawlers
       def loop_through_category(category)
         category['content']['products'].each do |product|
           next unless product['stock']
-          puts "#{product['name'].strip}: #{product['currentPrice'].strip.to_f}"
+          puts "#{product['name'].strip}: #{product['currentPrice']}"
           @products << { name: product['name'].strip,
-                         price: product['currentPrice'].strip.to_f,
+                         price: product['currentPrice'],
                          image: ("#{PAO_DE_ACUCAR_IMG_BASE_URL}#{product['thumbPath']}" rescue ''),
                          market: 'pao_de_acucar'
                        }
