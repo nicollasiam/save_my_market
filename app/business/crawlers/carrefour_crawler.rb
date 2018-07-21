@@ -15,7 +15,7 @@ module Crawlers
         links = home.css('#boxes-menulateral ul li ul li a').map { |category| category.attr('href') }
 
         # Visit all caterories
-        links.each_with_index do |link, index|
+        links.each do |link|
           begin
             puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
             category = Nokogiri::HTML(open("#{CARREFOUR_BASE_URL}#{link}"))
@@ -40,16 +40,21 @@ module Crawlers
           end
         end
 
-        Product.create!(@products)
+        all_products = @products.uniq
+        Product.create!(all_products)
       end
 
       private
 
       def loop_through_category(category)
         category.css('.prd-info').each do |product|
-          puts "#{product.css('.prd-name').text().strip}: #{product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f}"
+          price = product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          # If the price is zero, this and next products are not availble anymore
+          break if price.zero?
+
+          puts "#{product.css('.prd-name').text().strip}: #{price}"
           @products << { name: product.css('.prd-name').text().strip,
-                         price: product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f,
+                         price: price,
                          image: '',
                          market: 'carrefour'
                        }

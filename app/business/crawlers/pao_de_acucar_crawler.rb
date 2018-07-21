@@ -53,6 +53,7 @@ module Crawlers
       def loop_through_category(category)
         category['content']['products'].each do |product|
           next unless product['stock']
+
           puts "#{product['name'].strip}: #{product['currentPrice']}"
           @products << { name: product['name'].strip,
                          price: product['currentPrice'],

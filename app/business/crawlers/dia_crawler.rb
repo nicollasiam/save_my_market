@@ -15,7 +15,7 @@ module Crawlers
         links = home.css('.catalogo li.nav-item a').map { |category| category.attr('href') }
 
         # Visit all caterories
-        links.each_with_index do |link, index|
+        links.each do |link|
           begin
             puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
             category = Nokogiri::HTML(open(link))
@@ -48,9 +48,13 @@ module Crawlers
           product_url = element.attr('href')
           product = Nokogiri::HTML(open("#{DIA_BASE_URL}#{product_url}"))
 
-          puts "#{product.css('h1.nameProduct').text().strip}: #{product.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f}"
+          price = product.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          # If the price is zero, this and next products are not availble anymore
+          break if price.zero?
+
+          puts "#{product.css('h1.nameProduct').text().strip}: #{price}"
           @products << { name: product.css('h1.nameProduct').text().strip,
-                         price: product.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f,
+                         price: price,
                          image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
                          market: 'dia'
                        }
