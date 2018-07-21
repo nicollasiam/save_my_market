@@ -27,7 +27,7 @@ module Crawlers
         # Visit all caterories
         links.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
 
             until last_page
               category = JSON.parse(Nokogiri::HTML(open("#{PAO_DE_ACUCAR_BASE_URL}#{link}#{PAO_DE_ACUCAR_QUERY_STRING}&p=#{page}")))
@@ -54,7 +54,7 @@ module Crawlers
         category['content']['products'].each do |product|
           next unless product['stock']
 
-          puts "#{product['name'].strip}: #{product['currentPrice']}"
+          # puts "#{product['name'].strip}: #{product['currentPrice']}"
           @products << { name: product['name'].strip,
                          price: product['currentPrice'],
                          image: ("#{PAO_DE_ACUCAR_IMG_BASE_URL}#{product['thumbPath']}" rescue ''),

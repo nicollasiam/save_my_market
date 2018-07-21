@@ -15,12 +15,12 @@ module Crawlers
         # Visit all caterories
         mambo_categories_urls.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
             category = Nokogiri::HTML(open("#{link}#{page_number}")).css('.widget')
 
             # Stop only of next page is nil
             until category.empty?
-              puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
+              # puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
               loop_through_category(category)
 
               category = (Nokogiri::HTML(open("#{link}#{page_number + 1}")).css('.widget') rescue [])
@@ -45,7 +45,7 @@ module Crawlers
 
           price = product.css('[itemscope]').css('[itemprop=offers]').css('[itemprop=price]').attr('content').value().strip.to_f
 
-          puts "#{product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip}: #{price}"
+          # puts "#{product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip}: #{price}"
           @products << { name: product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip,
                          price: price,
                          image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),

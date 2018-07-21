@@ -17,7 +17,7 @@ module Crawlers
         # Visit all caterories
         links.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
             category = Nokogiri::HTML(open(link))
 
             # Loop the first products
@@ -27,7 +27,7 @@ module Crawlers
 
             # Stop only of next page is nil
             until category.css('a.shelf-url').empty?
-              puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
+              # puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
               loop_through_category(category)
 
               category = Nokogiri::HTML(open("#{link}?page=#{page_number + 1}"))
@@ -52,7 +52,7 @@ module Crawlers
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
 
-          puts "#{product.css('h1.nameProduct').text().strip}: #{price}"
+          # puts "#{product.css('h1.nameProduct').text().strip}: #{price}"
           @products << { name: product.css('h1.nameProduct').text().strip,
                          price: price,
                          image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
