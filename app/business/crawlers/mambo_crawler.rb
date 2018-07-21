@@ -1,59 +1,84 @@
 module Crawlers
   class MamboCrawler
-    MAMBO_BASE_URL = 'https://www.mambo.com.br/'.freeze
-
+    # Mambo uses vtex, which makes everything weird
+    # Its harder to access html AND api calls
+    # This is because I derectly got the weird categories urls
+    # so I could access directily
     require 'nokogiri'
     require 'open-uri'
 
     class << self
       def execute
-        # @products = []
-        # home = Nokogiri::HTML(open(MAMBO_BASE_URL))
+        @products = []
+        page_number = 1
 
-        # # Get all catergories links
-        # links = home.css('#boxes-menulateral ul li ul li a').map { |category| category.attr('href') }
+        # Visit all caterories
+        mambo_categories_urls.each do |link|
+          begin
+            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            category = Nokogiri::HTML(open("#{link}#{page_number}")).css('.widget')
 
-        # # Visit all caterories
-        # links.each_with_index do |link, index|
-        #   begin
-        #     puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
-        #     category = Nokogiri::HTML(open("#{CARREFOUR_BASE_URL}#{link}"))
+            # Stop only of next page is nil
+            until category.empty?
+              puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
+              loop_through_category(category)
 
-        #     # Loop the first products
-        #     loop_through_category(category)
+              category = (Nokogiri::HTML(open("#{link}#{page_number + 1}")).css('.widget') rescue [])
+              page_number += 1
+            end
+          rescue
+            puts "Erro! Vida que segue!"
+          end
 
-        #     # Click next button and continue visiting products
-        #     next_page = (category.css('#loadNextPage').attr('href').value rescue nil)
+          page_number = 1
+        end
 
-        #     # Stop only of next page is nil
-        #     until next_page.nil?
-        #       puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
-        #       category = Nokogiri::HTML(open(next_page))
-
-        #       loop_through_category(category)
-
-        #       next_page = (category.css('#loadNextPage').attr('href').value rescue nil)
-        #     end
-        #   rescue
-        #     puts "Erro! Vida que segue!"
-        #   end
-        # end
-
-        # all_products = @products.uniq
-        # Product.create!(all_products)
+        all_products = @products.uniq
+        Product.create!(all_products)
       end
 
       private
 
       def loop_through_category(category)
-        # category.css('.prd-info').each do |product|
-        #   puts "#{product.css('.prd-name').text().strip}: #{product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f}"
-        #   @products << { name: product.css('.prd-name').text().strip,
-        #                  price: product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f,
-        #                  image: '',
-        #                  market: 'carrefour'
-        #                }
+        category.each do |product_url|
+          product = Nokogiri::HTML(open(product_url.attr('data-url')))
+
+          price = product.css('[itemscope]').css('[itemprop=offers]').css('[itemprop=price]').attr('content').value().strip.to_f
+
+          puts "#{product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip}: #{price}"
+          @products << { name: product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip,
+                         price: price,
+                         image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
+                         market: 'mambo'
+                       }
         end
+      end
+
+      def mambo_categories_urls
+        [ # mercearia
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f4%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # hortifruti
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f6%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # carnes-aves-e-peixes
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f8%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # frios---laticinios
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f2%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # carnes-aves-e-peixes/pescados
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f8%2f458%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # padaria
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f19%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # congelados
+          'ttps://www.mambo.com.br/buscapagina?fq=C%3a%2f248%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # bebidas
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f3%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # utensilios-domesticos
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f192%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # limpeza
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f11%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # higiene-e-beleza
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f154%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
+          # petshop
+          'https://www.mambo.com.br/buscapagina?fq=C%3a%2f134%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=']
       end
     end
   end
