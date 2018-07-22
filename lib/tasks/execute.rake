@@ -30,4 +30,14 @@ namespace :execute do
     puts "Pão de Açucar: #{((pao_de_acucar_elapsed / 60) / 60).to_i} horas, #{(pao_de_acucar_elapsed / 60).to_i} minutos e #{(pao_de_acucar_elapsed % 60).to_i} segundos"
   end
 
+  desc 'Clear all invalid data'
+  task clear_invalid_data: :environment do
+    Applications::TrashBot.trashify
+  end
+
+  desc 'Run all tasks'
+  task run_all_tasks: [:environment,
+                       'execute:run_all_crawlers',
+                       'execute:clear_invalid_data'
+                      ]
 end
