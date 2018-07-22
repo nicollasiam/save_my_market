@@ -1,7 +1,8 @@
 .container.all-market-wrapper
   - @markets.each do |market|
-    .market-wrapper.py-3.my-4
-      .row
-        .col-xs-12 style='display: flex;'
-          = image_tag market.logo, height: 80, width: 200, class: 'pl-5'
-          h2.pl-5 = market.name
+    = link_to market do
+      .market-wrapper.py-3.my-4
+        .row
+          .col-xs-12 style='display: flex;'
+            = image_tag market.logo, height: 80, width: 200, class: 'pl-5'
+            h2.pl-5 = market.name
