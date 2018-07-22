@@ -1,0 +1,7 @@
+.container
+  - @markets.each do |market|
+    .market-wrapper.py-3.my-4
+      .row
+        .col-xs-12 style='display: flex;'
+          / = image_tag market.logo, height: 80, class: 'pl-5'
+          h2.pl-5 = market.name
