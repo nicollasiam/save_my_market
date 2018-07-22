@@ -4,6 +4,8 @@ module Crawlers
     # Its harder to access html AND api calls
     # This is because I derectly got the weird categories urls
     # so I could access directily
+    MAMBO_MODEL = Market.find_by(name: 'Mambo')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -33,8 +35,11 @@ module Crawlers
           page_number = 1
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = MAMBO_MODEL
+          product.save
+        end
       end
 
       private

@@ -1,6 +1,7 @@
 module Crawlers
   class HomeRefillCrawler
     HOME_REFILL_BASE_URL = 'https://www.homerefill.com.br/'.freeze
+    HOME_REFILL_MODEL = Market.find_by(name: 'Home Refill')
 
     require 'nokogiri'
     require 'open-uri'
@@ -42,8 +43,11 @@ module Crawlers
           end
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = HOME_REFILL_MODEL
+          product.save
+        end
       end
 
       private

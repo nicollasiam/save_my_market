@@ -11,6 +11,8 @@ module Crawlers
     # 36 is the maximun page size the api allows
     PAO_DE_ACUCAR_QUERY_STRING = '?storeId=501&qt=36&s=&ftr=&rm=&gt=list&isClienteMais=false'.freeze
 
+    PAO_DE_ACUCAR_MODEL = Market.find_by(name: 'Pão de Açucar')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -44,8 +46,11 @@ module Crawlers
           page = 0
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = PAO_DE_ACUCAR_MODEL
+          product.save
+        end
       end
 
       private

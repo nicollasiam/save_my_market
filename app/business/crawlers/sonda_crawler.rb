@@ -1,6 +1,7 @@
 module Crawlers
   class SondaCrawler
     SONDA_BASE_URL = 'https://www.sondadelivery.com.br/'.freeze
+    SONDA_MODEL = Market.find_by(name: 'Sonda')
 
     require 'nokogiri'
     require 'open-uri'
@@ -40,8 +41,11 @@ module Crawlers
           end
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = SONDA_MODEL
+          product.save
+        end
       end
 
       private

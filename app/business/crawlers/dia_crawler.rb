@@ -1,6 +1,7 @@
 module Crawlers
   class DiaCrawler
     DIA_BASE_URL = 'https://www.dia.com.br/'.freeze
+    DIA_MODEL = Market.find_by(name: 'Dia')
 
     require 'nokogiri'
     require 'open-uri'
@@ -38,7 +39,11 @@ module Crawlers
           end
         end
 
-        Product.create!(@products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = DIA_MODEL
+          product.save
+        end
       end
 
       private

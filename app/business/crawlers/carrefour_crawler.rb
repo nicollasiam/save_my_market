@@ -3,6 +3,8 @@ module Crawlers
     CARREFOUR_BASE_URL = 'https://www.carrefour.com.br'.freeze
     CARREFOUR_HOME_URL = 'https://www.carrefour.com.br/dicas/mercado'.freeze
 
+    CARREFOUR_MODEL = Market.find_by(name: 'Carrefour')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -40,8 +42,11 @@ module Crawlers
           end
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = CARREFOUR_MODEL
+          product.save
+        end
       end
 
       private
