@@ -63,7 +63,7 @@ module Crawlers
           @products << { name: product['name'].strip,
                          price: product['currentPrice'],
                          image: ("#{PAO_DE_ACUCAR_IMG_BASE_URL}#{product['thumbPath']}" rescue ''),
-                         market: 'pao_de_acucar'
+                         market_name: 'pao_de_acucar'
                        }
         end
       end

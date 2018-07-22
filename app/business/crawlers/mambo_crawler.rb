@@ -54,7 +54,7 @@ module Crawlers
           @products << { name: product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip,
                          price: price,
                          image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
-                         market: 'mambo'
+                         market_name: 'mambo'
                        }
         end
       end

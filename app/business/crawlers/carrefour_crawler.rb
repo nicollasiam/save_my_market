@@ -61,7 +61,7 @@ module Crawlers
           @products << { name: product.css('.prd-name').text().strip,
                          price: price,
                          image: '',
-                         market: 'carrefour'
+                         market_name: 'carrefour'
                        }
         end
       end

@@ -61,7 +61,7 @@ module Crawlers
           @products << { name: product.css('h1.nameProduct').text().strip,
                          price: price,
                          image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
-                         market: 'dia'
+                         market_name: 'dia'
                        }
         end
       end

@@ -62,7 +62,7 @@ module Crawlers
           @products << { name: product.css('h3').text().strip,
                          price: price,
                          image: (product.css('.atom-product-image img').attr('src').text().strip rescue ''),
-                         market: 'home_refill'
+                         market_name: 'home_refill'
                        }
         end
       end

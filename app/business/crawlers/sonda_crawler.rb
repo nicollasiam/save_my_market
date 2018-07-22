@@ -58,7 +58,7 @@ module Crawlers
           @products << { name: product.css('.product--info .tit').text().strip,
                          price: price,
                          image: (product.css('.lnk img').attr('src').value().strip rescue ''),
-                         market: 'sonda'
+                         market_name: 'sonda'
                        }
         end
       end
