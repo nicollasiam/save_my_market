@@ -10,18 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_18_225414) do
+ActiveRecord::Schema.define(version: 2018_07_22_202757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "markets", force: :cascade do |t|
+    t.string "name"
+    t.string "logo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.float "price"
     t.string "image"
-    t.string "market"
+    t.string "market_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "market_id"
+    t.index ["market_id"], name: "index_products_on_market_id"
   end
 
+  add_foreign_key "products", "markets"
 end

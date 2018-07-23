@@ -11,6 +11,8 @@ module Crawlers
     # 36 is the maximun page size the api allows
     PAO_DE_ACUCAR_QUERY_STRING = '?storeId=501&qt=36&s=&ftr=&rm=&gt=list&isClienteMais=false'.freeze
 
+    PAO_DE_ACUCAR_MODEL = Market.find_by(name: 'Pão de Açucar')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -27,7 +29,7 @@ module Crawlers
         # Visit all caterories
         links.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
 
             until last_page
               category = JSON.parse(Nokogiri::HTML(open("#{PAO_DE_ACUCAR_BASE_URL}#{link}#{PAO_DE_ACUCAR_QUERY_STRING}&p=#{page}")))
@@ -44,8 +46,11 @@ module Crawlers
           page = 0
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = PAO_DE_ACUCAR_MODEL
+          product.save
+        end
       end
 
       private
@@ -53,11 +58,12 @@ module Crawlers
       def loop_through_category(category)
         category['content']['products'].each do |product|
           next unless product['stock']
-          puts "#{product['name'].strip}: #{product['currentPrice']}"
+
+          # puts "#{product['name'].strip}: #{product['currentPrice']}"
           @products << { name: product['name'].strip,
                          price: product['currentPrice'],
                          image: ("#{PAO_DE_ACUCAR_IMG_BASE_URL}#{product['thumbPath']}" rescue ''),
-                         market: 'pao_de_acucar'
+                         market_name: 'pao_de_acucar'
                        }
         end
       end

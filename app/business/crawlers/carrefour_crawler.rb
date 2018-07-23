@@ -3,6 +3,8 @@ module Crawlers
     CARREFOUR_BASE_URL = 'https://www.carrefour.com.br'.freeze
     CARREFOUR_HOME_URL = 'https://www.carrefour.com.br/dicas/mercado'.freeze
 
+    CARREFOUR_MODEL = Market.find_by(name: 'Carrefour')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -15,9 +17,9 @@ module Crawlers
         links = home.css('#boxes-menulateral ul li ul li a').map { |category| category.attr('href') }
 
         # Visit all caterories
-        links.each_with_index do |link, index|
+        links.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
             category = Nokogiri::HTML(open("#{CARREFOUR_BASE_URL}#{link}"))
 
             # Loop the first products
@@ -28,7 +30,7 @@ module Crawlers
 
             # Stop only of next page is nil
             until next_page.nil?
-              puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
+              # puts '---------------------------------------- PROXIMA PÁGINA ----------------------------------------'
               category = Nokogiri::HTML(open(next_page))
 
               loop_through_category(category)
@@ -40,18 +42,26 @@ module Crawlers
           end
         end
 
-        Product.create!(@products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = CARREFOUR_MODEL
+          product.save
+        end
       end
 
       private
 
       def loop_through_category(category)
         category.css('.prd-info').each do |product|
-          puts "#{product.css('.prd-name').text().strip}: #{product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f}"
+          price = product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          # If the price is zero, this and next products are not availble anymore
+          break if price.zero?
+
+          # puts "#{product.css('.prd-name').text().strip}: #{price}"
           @products << { name: product.css('.prd-name').text().strip,
-                         price: product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f,
+                         price: price,
                          image: '',
-                         market: 'carrefour'
+                         market_name: 'carrefour'
                        }
         end
       end
