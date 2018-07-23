@@ -7,7 +7,10 @@ namespace :execute do
     dia_end = Time.now
     puts "Fim Dia: #{dia_end}"
     dia_elapsed = dia_end - dia_start
-    puts "Dia: #{((dia_elapsed / 60) / 60).to_i} horas, #{(dia_elapsed / 60).to_i} minutos e #{(dia_elapsed % 60).to_i} segundos"
+    hours = ((dia_elapsed / 60) / 60).to_i
+    minutes = ((dia_elapsed / 60) % 60).to_i
+    seconds = (dia_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Dia: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     mambo_start = Time.now
     puts "Início Mambo: #{mambo_start}"
@@ -15,7 +18,10 @@ namespace :execute do
     mambo_end = Time.now
     puts "Fim Mambo: #{mambo_end}"
     mambo_elapsed = mambo_end - mambo_start
-    puts "Mambo: #{((mambo_elapsed / 60) / 60).to_i} horas, #{(mambo_elapsed / 60).to_i} minutos e #{(mambo_elapsed % 60).to_i} segundos"
+    hours = ((mambo_elapsed / 60) / 60).to_i
+    minutes = ((mambo_elapsed / 60) % 60).to_i
+    seconds = (mambo_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Mambo: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     home_refill_start = Time.now
     puts "Início Home Refill: #{home_refill_start}"
@@ -23,14 +29,20 @@ namespace :execute do
     home_refill_end = Time.now
     puts "Fim Home Refill: #{home_refill_end}"
     home_refill_elapsed = home_refill_end - home_refill_start
-    puts "Home Refill: #{((home_refill_elapsed / 60) / 60).to_i} horas, #{(home_refill_elapsed / 60).to_i} minutos e #{(home_refill_elapsed % 60).to_i} segundos"
+    hours = ((home_refill_elapsed / 60) / 60).to_i
+    minutes = ((home_refill_elapsed / 60) % 60).to_i
+    seconds = (home_refill_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Home Refill: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     # extra_start = Time.now
     # Crawlers::ExtraCrawler.execute
     # extra_end = Time.now
     # puts "Fim Extra: #{extra_end}"
     # extra_elapsed = extra_end - extra_start
-    # puts "Extra: #{((extra_elapsed / 60) / 60).to_i} horas, #{(extra_elapsed / 60).to_i} minutos e #{(extra_elapsed % 60).to_i} segundos"
+    # hours = ((extra_elapsed / 60) / 60).to_i
+    # minutes = ((extra_elapsed / 60) % 60).to_i
+    # seconds = (extra_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    # puts "Extra: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     carrefour_start = Time.now
     puts "Início Carrefour: #{carrefour_start}"
@@ -38,7 +50,10 @@ namespace :execute do
     carrefour_end = Time.now
     puts "Fim Carrefour: #{carrefour_end}"
     carrefour_elapsed = carrefour_end - carrefour_start
-    puts "Carrefour: #{((carrefour_elapsed / 60) / 60).to_i} horas, #{(carrefour_elapsed / 60).to_i} minutos e #{(carrefour_elapsed % 60).to_i} segundos"
+    hours = ((carrefour_elapsed / 60) / 60).to_i
+    minutes = ((carrefour_elapsed / 60) % 60).to_i
+    seconds = (carrefour_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Carrefour: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     pao_de_acucar_start = Time.now
     puts "Início Pão de Açucar: #{pao_de_acucar_start}"
@@ -46,10 +61,16 @@ namespace :execute do
     pao_de_acucar_end = Time.now
     puts "Fim Pão de Açucar: #{pao_de_acucar_end}"
     pao_de_acucar_elapsed = pao_de_acucar_end - pao_de_acucar_start
-    puts "Pão de Açucar: #{((pao_de_acucar_elapsed / 60) / 60).to_i} horas, #{(pao_de_acucar_elapsed / 60).to_i} minutos e #{(pao_de_acucar_elapsed % 60).to_i} segundos"
+    hours = ((pao_de_acucar_elapsed / 60) / 60).to_i
+    minutes = ((pao_de_acucar_elapsed / 60) % 60).to_i
+    seconds = (pao_de_acucar_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Pão de Açucar: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     total_elapsed = pao_de_acucar_end - dia_start
-    puts "TEMPO TOTAL DECORRIDO: #{((total_elapsed / 60) / 60).to_i} horas, #{(total_elapsed / 60).to_i} minutos e #{(total_elapsed % 60).to_i} segundos"
+    hours = ((total_elapsed / 60) / 60).to_i
+    minutes = ((total_elapsed / 60) % 60).to_i
+    seconds = (total_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "TEMPO TOTAL DECORRIDO: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
   end
 
   desc 'Clear all invalid data'
