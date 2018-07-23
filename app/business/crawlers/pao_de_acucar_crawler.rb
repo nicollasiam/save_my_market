@@ -43,6 +43,7 @@ module Crawlers
             puts "Erro! Vida que segue!"
           end
 
+          last_page = false
           page = 0
         end
 

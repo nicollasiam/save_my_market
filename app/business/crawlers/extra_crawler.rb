@@ -43,8 +43,8 @@ module Crawlers
             puts "Erro! Vida que segue!"
           end
 
-          page = 0
           last_page = false
+          page = 0
         end
 
         @products.uniq.each do |product_hash|
