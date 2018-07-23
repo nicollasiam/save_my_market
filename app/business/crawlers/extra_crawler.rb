@@ -11,6 +11,8 @@ module Crawlers
     # 36 is the maximun page size the api allows
     EXTRA_QUERY_STRING = '?storeId=241&qt=36&s=&ftr=&rm=&gt=list&isClienteMais=false'.freeze
 
+    EXTRA_MODEL = Market.find_by(name: 'Extra')
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -27,7 +29,7 @@ module Crawlers
         # Visit all caterories
         links.each do |link|
           begin
-            puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
+            # puts '+++++++++++++++++++++++++++++++++++++++ PROXIMA CATEGORIA +++++++++++++++++++++++++++++++++++++++'
 
             until last_page
               category = JSON.parse(Nokogiri::HTML(open("#{EXTRA_BASE_URL}#{link}#{EXTRA_QUERY_STRING}&p=#{page}")))
@@ -42,10 +44,14 @@ module Crawlers
           end
 
           page = 0
+          last_page = false
         end
 
-        all_products = @products.uniq
-        Product.create!(all_products)
+        @products.uniq.each do |product_hash|
+          product = Product.new(product_hash)
+          product.market = EXTRA_MODEL
+          product.save
+        end
       end
 
       private
@@ -53,11 +59,11 @@ module Crawlers
       def loop_through_category(category)
         category['content']['products'].each do |product|
           next unless product['stock']
-          puts "#{product['name'].strip}: #{product['currentPrice']}"
+          # puts "#{product['name'].strip}: #{product['currentPrice']}"
           @products << { name: product['name'].strip,
                          price: product['currentPrice'],
                          image: ("#{EXTRA_IMG_BASE_URL}#{product['thumbPath']}" rescue ''),
-                         market: 'extra'
+                         market_name: 'extra'
                        }
         end
       end

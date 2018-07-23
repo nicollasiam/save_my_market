@@ -34,15 +34,16 @@ namespace :execute do
     seconds = (home_refill_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
     puts "Home Refill: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
-    # extra_start = Time.now
-    # Crawlers::ExtraCrawler.execute
-    # extra_end = Time.now
-    # puts "Fim Extra: #{extra_end}"
-    # extra_elapsed = extra_end - extra_start
-    # hours = ((extra_elapsed / 60) / 60).to_i
-    # minutes = ((extra_elapsed / 60) % 60).to_i
-    # seconds = (extra_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
-    # puts "Extra: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
+    extra_start = Time.now
+    puts "Início Extra: #{extra_start}"
+    Crawlers::ExtraCrawler.execute
+    extra_end = Time.now
+    puts "Fim Extra: #{extra_end}"
+    extra_elapsed = extra_end - extra_start
+    hours = ((extra_elapsed / 60) / 60).to_i
+    minutes = ((extra_elapsed / 60) % 60).to_i
+    seconds = (extra_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Extra: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     carrefour_start = Time.now
     puts "Início Carrefour: #{carrefour_start}"
