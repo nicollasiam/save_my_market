@@ -67,7 +67,18 @@ namespace :execute do
     seconds = (pao_de_acucar_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
     puts "Pão de Açucar: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
-    total_elapsed = pao_de_acucar_end - dia_start
+    sonda_start = Time.now
+    puts "Início Sonda: #{sonda_start}"
+    Crawlers::sondaCrawler.execute
+    sonda_end = Time.now
+    puts "Fim Sonda: #{sonda_end}"
+    sonda_elapsed = sonda_end - sonda_start
+    hours = ((sonda_elapsed / 60) / 60).to_i
+    minutes = ((sonda_elapsed / 60) % 60).to_i
+    seconds = (sonda_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "Sonda: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
+
+    total_elapsed = sonda_end - dia_start
     hours = ((total_elapsed / 60) / 60).to_i
     minutes = ((total_elapsed / 60) % 60).to_i
     seconds = (total_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i

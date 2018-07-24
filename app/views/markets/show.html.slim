@@ -1,0 +1,5 @@
+h1 = "#{@products.count} produtos em #{@market.name}"
+
+ul
+  - @products.order(:name).each do |product|
+    li = product.name

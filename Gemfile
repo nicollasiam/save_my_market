@@ -37,6 +37,7 @@ gem 'font-awesome-sass', '~> 5.0.13'
 gem 'simple_form', '~> 4.0.0'
 gem 'slim-rails', '~> 3.1.3'
 gem 'awesome_print'
+gem 'friendly_id', '~> 5.1.0'
 
 # Core
 gem 'nokogiri'
