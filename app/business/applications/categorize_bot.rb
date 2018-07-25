@@ -1,10 +1,139 @@
 module Applications
   class CategorizeBot
+    BUTCHERY_MODEL = Category.find_by(name: 'butchery')
+    DRINKS_MODEL = Category.find_by(name: 'drinks')
+    ALCOHOLIC_DRINKS_MODEL = Category.find_by(name: 'alcoholic_drinks')
+    CANDY_MODEL = Category.find_by(name: 'candy')
+    FROZEN_FOOD_MODEL = Category.find_by(name: 'frozen_food')
+    DISPOSABLE_MODEL = Category.find_by(name: 'disposable')
+    CHEESE_MODEL = Category.find_by(name: 'cheese')
+    HYGIENE_MODEL = Category.find_by(name: 'hygiene')
+    FRUIT_AND_VEGETABLES_MODEL = Category.find_by(name: 'fruit_and_vegetables')
+    GROCERS_MODEL = Category.find_by(name: 'grocers')
+
+
     class << self
       def categorize
+        products = Product.where(category_id: nil)
+
+        products.each do |product|
+          categorize_acougue(product)
+          categorize_bebidas(product) if product.category.nil?
+          categorize_bebidas_alcoolicas(product) if product.category.nil?
+          categorize_doces(product) if product.category.nil?
+          categorize_congelados(product) if product.category.nil?
+          categorize_descartaveis(product) if product.category.nil?
+          categorize_queijos_e_frios(product) if product.category.nil?
+          categorize_higiene(product) if product.category.nil?
+          categorize_hortifruti(product) if product.category.nil?
+          categorize_mercearia(product) if product.category.nil?
+
+          puts "#{product.name} CATEGORIZADO" if product.category
+          puts "ERRO AO CATEGORIZAR PRODUTO #{product.name}" if product.category.nil?
+        end
       end
 
       private
+
+      def categorize_acougue(product)
+        acougue_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = BUTCHERY_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_bebidas(product)
+        bebidas_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = DRINKS_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_bebidas_alcoolicas(product)
+        bebidas_alcoolicas_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = ALCOHOLIC_DRINKS_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_doces(product)
+        doces_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = CANDY_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_congelados(product)
+        congelados_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = FROZEN_FOOD_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_descartaveis(product)
+        descartaveis_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = DISPOSABLE_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_queijos_e_frios(product)
+        queijos_e_frios_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = CHEESE_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_higiene(product)
+        higiene_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = HYGIENE_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_hortifruti(product)
+        hortifruti_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = FRUIT_AND_VEGETABLES_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_mercearia(product)
+        mercearia_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = GROCERS_MODEL
+            product.save
+            break
+          end
+        end
+      end
 
       def acougue_key_words
         ['salsicha', 'linguiça', 'frango', 'costela', 'bovina', 'bovino', 'charque', 'contra filé', 'camarão', 'bacon', 'carne',

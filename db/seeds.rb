@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Market.create![{ :name => "Home Refill",
+Market.create!([{ :name => "Home Refill",
                  :logo => "https://lh3.googleusercontent.com/3gYY9yBzi1mDOxK-YPia66yti9-EwDPxdizeafLpjr6HSYoZBcva1Q65arXSLHt3FEM"
                },
                { :name => "Sonda",
@@ -26,4 +26,17 @@ Market.create![{ :name => "Home Refill",
                },
                { :name => "Mambo",
                  :logo => "https://www.pegadesconto.com.br/wp-content/uploads/mambo-delivery-logotipo-191x115.png"
-               }]
+               }])
+
+Category.create!([{ name: 'butchery' },
+                 { name: 'drinks' },
+                 { name: 'alcoholic_drinks' },
+                 { name: 'candy' },
+                 { name: 'frozen_food' },
+                 { name: 'frozen_food' },
+                 { name: 'disposable' },
+                 { name: 'cheese' },
+                 { name: 'hygiene' },
+                 { name: 'fruit_and_vegetables' },
+                 { name: 'grocers' }
+                 ])

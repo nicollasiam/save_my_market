@@ -69,7 +69,7 @@ namespace :execute do
 
     sonda_start = Time.now
     puts "Início Sonda: #{sonda_start}"
-    Crawlers::sondaCrawler.execute
+    Crawlers::SondaCrawler.execute
     sonda_end = Time.now
     puts "Fim Sonda: #{sonda_end}"
     sonda_elapsed = sonda_end - sonda_start
