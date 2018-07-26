@@ -13,7 +13,7 @@ namespace :execute do
     puts "Dia: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     mambo_start = Time.now
-    puts "Início Mambo: #{mambo_start}"
+    puts "\nInício Mambo: #{mambo_start}"
     Crawlers::MamboCrawler.execute
     mambo_end = Time.now
     puts "Fim Mambo: #{mambo_end}"
@@ -24,7 +24,7 @@ namespace :execute do
     puts "Mambo: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     home_refill_start = Time.now
-    puts "Início Home Refill: #{home_refill_start}"
+    puts "\nInício Home Refill: #{home_refill_start}"
     Crawlers::HomeRefillCrawler.execute
     home_refill_end = Time.now
     puts "Fim Home Refill: #{home_refill_end}"
@@ -35,7 +35,7 @@ namespace :execute do
     puts "Home Refill: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     extra_start = Time.now
-    puts "Início Extra: #{extra_start}"
+    puts "\nInício Extra: #{extra_start}"
     Crawlers::ExtraCrawler.execute
     extra_end = Time.now
     puts "Fim Extra: #{extra_end}"
@@ -46,7 +46,7 @@ namespace :execute do
     puts "Extra: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     carrefour_start = Time.now
-    puts "Início Carrefour: #{carrefour_start}"
+    puts "\nInício Carrefour: #{carrefour_start}"
     Crawlers::CarrefourCrawler.execute
     carrefour_end = Time.now
     puts "Fim Carrefour: #{carrefour_end}"
@@ -57,7 +57,7 @@ namespace :execute do
     puts "Carrefour: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     pao_de_acucar_start = Time.now
-    puts "Início Pão de Açucar: #{pao_de_acucar_start}"
+    puts "\nInício Pão de Açucar: #{pao_de_acucar_start}"
     Crawlers::PaoDeAcucarCrawler.execute
     pao_de_acucar_end = Time.now
     puts "Fim Pão de Açucar: #{pao_de_acucar_end}"
@@ -68,7 +68,7 @@ namespace :execute do
     puts "Pão de Açucar: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
 
     sonda_start = Time.now
-    puts "Início Sonda: #{sonda_start}"
+    puts "\nInício Sonda: #{sonda_start}"
     Crawlers::SondaCrawler.execute
     sonda_end = Time.now
     puts "Fim Sonda: #{sonda_end}"
@@ -87,12 +87,34 @@ namespace :execute do
 
   desc 'Clear all invalid data'
   task clear_invalid_data: :environment do
+    start_time = Time.now
+    puts "\nCleaning invalid data: start at #{start_time}"
     Applications::TrashBot.trashify
+    end_time = Time.now
+    total_elapsed = end_time - start_time
+    hours = ((total_elapsed / 60) / 60).to_i
+    minutes = ((total_elapsed / 60) % 60).to_i
+    seconds = (total_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "TEMPO TOTAL DECORRIDO: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
+  end
+
+  desc 'Categorize all new Products'
+  task categorize_products: :environment do
+    start_time = Time.now
+    puts "\nCleaning invalid data: start at #{start_time}"
+    Applications::CategorizeBot.categorize
+    end_time = Time.now
+    total_elapsed = end_time - start_time
+    hours = ((total_elapsed / 60) / 60).to_i
+    minutes = ((total_elapsed / 60) % 60).to_i
+    seconds = (total_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "TEMPO TOTAL DECORRIDO: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
   end
 
   desc 'Run all tasks'
   task run_all_tasks: [:environment,
                        'execute:run_all_crawlers',
-                       'execute:clear_invalid_data'
+                       'execute:clear_invalid_data',
+                       'execute:categorize_products'
                       ]
 end
