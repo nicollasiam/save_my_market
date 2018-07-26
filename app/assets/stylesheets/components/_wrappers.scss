@@ -1,13 +1,36 @@
 .all-market-wrapper {
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
   .market-wrapper {
-    border: 1px solid;
     border-radius: 10px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
     background-color: white;
+    position: relative;
+    padding: 0 !important;
+
+    hr {
+      width: 80%;
+    }
+
+    img {
+      margin-top: 50px;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      padding-bottom: 50px;
+      padding-top: 7px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 100%;
+    }
+
+    &:hover {
+      box-shadow: 0 2px 4px 0 rgba(0,0,0, .5);
+    }
   }
 }
