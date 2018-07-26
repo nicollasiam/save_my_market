@@ -1,0 +1,21 @@
+.pagination {
+  margin-top: 20px;
+  padding-left: 15px;
+
+  .page-item {
+    text-decoration: none;
+    font-size: 0.8em;
+
+    .page-link {
+      margin: 2px;
+      border-radius: 20em;
+      background: none;
+      color: #999999;
+      border: solid 1px gray;
+
+      &:not([href]) {
+        border: solid 1px orange;
+      }
+    }
+  }
+}

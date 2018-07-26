@@ -34,3 +34,38 @@
     }
   }
 }
+
+.all-products-wrapper {
+  .col-12, .col-md-6, .col-lg-3 {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .product-wrapper {
+    border-radius: 4px;
+    border: 1px solid #e5e2e2;
+    background-color: white;
+    position: relative;
+
+    hr {
+      width: 80%;
+    }
+
+    .description-wrapper {
+      h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #6e6e6e;
+        padding: 5px 20px;
+        height: 80px;
+      }
+
+      span {
+        color: purple;
+        font-size: 1.4rem;
+        font-weight: bold;
+        padding-bottom: 15px;
+      }
+    }
+  }
+}

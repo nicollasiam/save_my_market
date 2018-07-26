@@ -1,5 +1,21 @@
-h1 = "#{@products.count} produtos em #{@market.name}"
+.all-products-wrapper
+  .container
+    .row
+      .col-xs-12
+        h1 = @market.name
 
-ul
-  - @products.order(:name).each do |product|
-    li = product.name
+    .row
+      .col-xs-12.d-flex
+        span = "Produtos encontrados: #{@products.count}"
+        = paginate @products, params: request.query_parameters, window: 2
+
+    .row
+      - @products.each do |product|
+        .col-12.col-md-6.col-lg-3
+          .product-wrapper.py-3.my-1.text-center
+            = link_to '', market_product_path(product)
+            = image_tag product.image, height: 200
+            hr
+            .description-wrapper
+              h2 = product.name
+              span = product.price

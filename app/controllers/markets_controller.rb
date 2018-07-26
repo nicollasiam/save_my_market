@@ -6,6 +6,7 @@ class MarketsController < ApplicationController
   end
 
   def show
+    @market = Market.friendly.find(params[:id])
     get_products
   end
 
@@ -16,7 +17,10 @@ class MarketsController < ApplicationController
   end
 
   def get_products
-    @products = Product.where("to_char(created_at, 'DD/MM/YYYY') > ? AND market_id = ?", Time.now.strftime('%d/%m/%Y'), @market.id)
-    @products = Product.where("to_char(created_at, 'DD/MM/YYYY') > ? AND market_id = ?", (Time.now - 1.day).strftime('%d/%m/%Y'), @market.id) if @products.count.zero?
+    @products = @market.products.where("to_char(created_at, 'DD/MM/YYYY') > ?", Time.now.strftime('%d/%m/%Y'))
+                       .order(:name).page params[:page]
+
+    @products = @market.products.where("to_char(created_at, 'DD/MM/YYYY') > ?", (Time.now - 1.day).strftime('%d/%m/%Y'))
+                       .order(:name).page params[:page] if @products.count.zero?
   end
 end
