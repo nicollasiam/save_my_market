@@ -181,16 +181,16 @@ module Applications
       end
 
       def bebidas_key_words
-        ['coca', 'cocacola', 'coca-cola', 'água', 'dolce', 'solúvel', 'energético', 'espresso', 'isotônico', 'nescau', 'suco', 'nectar',
-         'chá',  'fanta', 'guaraná', 'leite', 'café', 'toddynho', 'kuat', 'refrigerante', 'toddy', 'refresco', 'schweppes',
-         'sprite', 'ades', 'h2oh', 'h2oh!', 'pepsi', 'gatorade'
+        ['coca', 'cocacola', 'coca-cola', 'água', 'dolce', 'solúvel', 'energético', 'espresso', 'isotônico', 'nescau', 'suco',
+         'nectar',  'chá',  'fanta', 'guaraná', 'leite', 'café', 'toddynho', 'kuat', 'refrigerante', 'toddy', 'refresco', 'schweppes',
+         'sprite', 'ades', 'h2oh', 'h2oh!', 'pepsi', 'gatorade', 'néctar'
         ]
       end
 
       def bebidas_alcoolicas_key_words
         ['cerveja', 'vodka', 'whisky', 'catuaba', 'vinho', 'espumante', 'licor', 'saque', 'saquê', 'cachaça', 'conhaque', 'tequila',
          'aperol', 'rum', 'gin', 'champagne', 'long neck', 'chandon', 'chandom', 'whysky', 'whiskey', 'whiky', 'vermouth', 'vermute',
-         'absolut', 'aguardente', 'aguardardente'
+         'absolut', 'aguardente', 'aguardardente', 'coquetel'
         ]
       end
 
@@ -223,7 +223,7 @@ module Applications
         ['shampoo', 'sabonete', 'desodorante', 'condicionador', 'loção', 'cabelo', 'protetor solar', 'espuma de barbear',
          'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação', 'colgate', 'sorriso', 'closeup',
          'close up', 'alvejante', 'repelente', 'aborvente', 'absorvente', 'absovente', 'vanish', 'sbp', 'bom ar', 'aguarrás',
-         'álcool', 'alcool', 'escova de dente'
+         'álcool', 'alcool', 'escova de dente', 'grand prix', 'pasta de dente', 'creme dental'
         ]
       end
 
@@ -248,7 +248,8 @@ module Applications
       def beleza_key_words
         ['1ka', 'ykas', 'zap', 'yellow ye', 'yellow kit', 'yellow profissional', 'yellow new', 'yellow form', 'yellow ativador',
          'zero nó', 'ybera', 'bronzeado', 'protetor solar', 'wella', 'hidratante', 'lola cosmetics', "victoria's secret", 'truss',
-         'agilise', 'advance techniques', 'adstringente', 'siàge', 'haskell', 'senscience', 'esfoliante', 'alfaparf'
+         'agilise', 'advance techniques', 'adstringente', 'siàge', 'haskell', 'senscience', 'esfoliante', 'alfaparf', 'defrizante',
+         'thermoliss'
         ]
       end
 
@@ -256,13 +257,16 @@ module Applications
         ['bolas pvc para massagem', 'abridor de lata', 'taça', 'copo', 'vassoura', 'pá', 'rodo', 'acendedor', 'wahl', 'varal',
          'tv led', 'adaptador', 'touca', 'gama italy', 'esponja', 'filtro de papel', 'lã de aço', 'bombril', 'liquidificador',
          'prendedor de roupa' ,'escova', 'barbante', 'isqueiro', 'pano de prato', 'espeto', 'tigela', 'espremedor', 'super bonder',
-         'tramontina', 'saca rolha', 'saca rolhas', 'protetor de mesa', 'jarra', 'pote', 'assadeira', 'forma'
+         'tramontina', 'saca rolha', 'saca rolhas', 'protetor de mesa', 'jarra', 'pote', 'assadeira', 'forma', 'sanremo', 'tabua',
+         'tábua', 'pegador', 'garfo', 'faca', 'colher', 'martinazzo', 'simonaggio', 'martinox', 'duralex', 'panela', 'panelux',
+         'frigideira', 'prato', 'batedeira', 'escoredor', 'ralador', 'starhouse', 'cafeteira', 'filme de pvc', 'filme pvc',
+         'faqueiro', 'mixer', 'sanduicheira'
         ]
       end
 
       def outros_key_words
         ['whey', 'v6', 'vaselina', 'vegetariano', 'albumina', 'midway', 'lampada', 'lâmpada', 'toalha', 'chinelo', 'sandalia',
-         'sandália', 'cola universal', 'regulador de pressão', 'panela de pressão', 'barbuche', 'caneta'
+         'sandália', 'cola universal', 'regulador de pressão', 'barbuche', 'caneta', 'extensão', 'porta', 'inflável', 'bolsa', 'caçarola', 'durepoxi', 'cabide', 'capa', 'pulverizador', 'carvão'
         ]
       end
     end
