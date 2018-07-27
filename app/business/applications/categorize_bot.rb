@@ -198,7 +198,7 @@ module Applications
         ['bombom',  'chocolate', 'leite condensado', 'sorvete', 'gelatina', 'geléia', 'bolo', 'bala', 'panetone' 'chichlete',
          'creme de leite', 'bis', 'goiabada', 'doce', 'paçoca', 'creme de avelã', 'chantily', 'confeito', 'granulado', 'cobertura',
          'marshmallow', 'mel', 'páscoa', 'pão de mel', 'alfajor', 'flan', 'brigadeiro', 'cocada', 'confeitaria', 'fondant',
-         'pé de moleque', 'mousse', 'abacaxi em calda', 'abacaxi fatiado em calda', 'wafer', 'waffle', 'torta'
+         'pé de moleque', 'mousse', 'abacaxi em calda', 'abacaxi fatiado em calda', 'wafer', 'waffle', 'torta', 'figo em calda'
         ]
       end
 
@@ -209,7 +209,7 @@ module Applications
       def descartaveis_key_words
         ['papel higiênico', 'lixo', 'guardanapo', 'guardanapos', 'papel toalha', 'papel absorvente', 'lenço de papel',
          'lenços de papel', 'pilha', 'bateria', 'fósforo', 'embalagem', 'filtro de café', 'descartável', 'descartáveis', 'canudo',
-         'papel manteiga', 'papel alumínio', 'filme pvc', 'vela', 'bexiga', 'organizador de alimentos'
+         'papel manteiga', 'papel alumínio', 'filme pvc', 'vela', 'bexiga', 'organizador de alimentos', 'sacola plastica', 'sacola plástica', 'saco plastico', 'saco plástico', 'sacos plasticos', 'sacos plásticos', 'saco para cubos de gelo'
         ]
       end
 
@@ -221,8 +221,9 @@ module Applications
 
       def higiene_key_words
         ['shampoo', 'sabonete', 'desodorante', 'condicionador', 'loção', 'cabelo', 'protetor solar', 'espuma de barbear',
-          'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação', 'colgate', 'sorriso', 'closeup',
-          'close up', 'alvejante', 'repelente', 'aborvente', 'absorvente', 'absovente', 'vanish', 'sbp', 'bom ar', 'aguarrás'
+         'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação', 'colgate', 'sorriso', 'closeup',
+         'close up', 'alvejante', 'repelente', 'aborvente', 'absorvente', 'absovente', 'vanish', 'sbp', 'bom ar', 'aguarrás',
+         'álcool', 'alcool', 'escova de dente'
         ]
       end
 
@@ -232,7 +233,7 @@ module Applications
          'ameixa', 'amêndoa', 'brócolis', 'limão', 'pera', 'pimentão', 'abobrinha', 'abóbora', 'beterraba', 'couve', 'cebolinha',
          'cenoura', 'chia', 'gergelim', 'mexerica', 'folha', 'vagem', 'espinafre', 'manga', 'maracujá', 'melão', 'azeitona',
          'abacate', 'abacaxi', 'abobora', 'abóbora', 'morango', 'acelga', 'agriao', 'agrião', 'vegetal', 'vegetais', 'aipim',
-         'mandioquinha', 'macaxeira', 'macaxera'
+         'mandioquinha', 'macaxeira', 'macaxera', 'figo'
         ]
       end
 
@@ -247,18 +248,22 @@ module Applications
       def beleza_key_words
         ['1ka', 'ykas', 'zap', 'yellow ye', 'yellow kit', 'yellow profissional', 'yellow new', 'yellow form', 'yellow ativador',
          'zero nó', 'ybera', 'bronzeado', 'protetor solar', 'wella', 'hidratante', 'lola cosmetics', "victoria's secret", 'truss',
-         'agilise', 'advance techniques', 'adstringente', 'siàge', 'haskell', 'senscience', 'esfoliante'
+         'agilise', 'advance techniques', 'adstringente', 'siàge', 'haskell', 'senscience', 'esfoliante', 'alfaparf'
         ]
       end
 
       def utensilios_key_words
         ['bolas pvc para massagem', 'abridor de lata', 'taça', 'copo', 'vassoura', 'pá', 'rodo', 'acendedor', 'wahl', 'varal',
-         'tv led', 'adaptador', 'touca', 'gama italy'
+         'tv led', 'adaptador', 'touca', 'gama italy', 'esponja', 'filtro de papel', 'lã de aço', 'bombril', 'liquidificador',
+         'prendedor de roupa' ,'escova', 'barbante', 'isqueiro', 'pano de prato', 'espeto', 'tigela', 'espremedor', 'super bonder',
+         'tramontina', 'saca rolha', 'saca rolhas', 'protetor de mesa', 'jarra', 'pote', 'assadeira', 'forma'
         ]
       end
 
       def outros_key_words
-        ['whey', 'v6', 'vaselina', 'vegetariano', 'albumina', 'midway']
+        ['whey', 'v6', 'vaselina', 'vegetariano', 'albumina', 'midway', 'lampada', 'lâmpada', 'toalha', 'chinelo', 'sandalia',
+         'sandália', 'cola universal', 'regulador de pressão', 'panela de pressão', 'barbuche', 'caneta'
+        ]
       end
     end
   end
