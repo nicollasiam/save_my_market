@@ -10,6 +10,9 @@ module Applications
     HYGIENE_MODEL = Category.find_by(name: 'hygiene')
     FRUIT_AND_VEGETABLES_MODEL = Category.find_by(name: 'fruit_and_vegetables')
     GROCERS_MODEL = Category.find_by(name: 'grocers')
+    BEAUTY_MODEL = Category.find_by(name: 'beauty')
+    UTENSILS_MODEL = Category.find_by(name: 'utensils')
+    OTHER_MODEL = Category.find_by(name: 'other')
 
 
     class << self
@@ -27,9 +30,12 @@ module Applications
           categorize_higiene(product) if product.category.nil?
           categorize_hortifruti(product) if product.category.nil?
           categorize_mercearia(product) if product.category.nil?
+          categorize_beleza(product) if product.category.nil?
+          categorize_utensilios(product) if product.category.nil?
+          categorize_outros(product) if product.category.nil?
 
-          puts "#{product.name} CATEGORIZADO" if product.category
-          puts "ERRO AO CATEGORIZAR PRODUTO #{product.name}" if product.category.nil?
+          # puts "#{product.name} CATEGORIZADO" if product.category
+          # puts "ERRO AO CATEGORIZAR PRODUTO #{product.name}" if product.category.nil?
         end
       end
 
@@ -135,73 +141,124 @@ module Applications
         end
       end
 
+      def categorize_beleza(product)
+        beleza_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = BEAUTY_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_utensilios(product)
+        utensilios_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = UTENSILS_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
+      def categorize_outros(product)
+        outros_key_words.each do |key_word|
+          if product.name.downcase.include?(key_word)
+            product.category = OTHER_MODEL
+            product.save
+            break
+          end
+        end
+      end
+
       def acougue_key_words
         ['salsicha', 'linguiça', 'frango', 'costela', 'bovina', 'bovino', 'charque', 'contra filé', 'camarão', 'bacon', 'carne',
-         'sobrecoxa', 'hambúrguer', 'asa', 'coxa', 'bacalhau', 'sardinha', 'kani', 'peixe', 'espinha', 'linguado',
-         'abadejo', 'coração', 'tilápia', 'merluza', 'salmão', 'lagosta', 'mexilhão', 'porco', 'lombo', 'suíno', 'suína' 'lula',
-         'polvo', 'picanha', 'alcatra', 'maminha', 'kafta', 'maturatta', 'pato', 'fraldinha', 'asinha', 'acém', 'pernil', 'chorizo',
-         'paio'
+         'sobrecoxa', 'hambúrguer', 'asa', 'coxa', 'bacalhau', 'sardinha', 'kani', 'peixe', 'espinha', 'linguado', 'abadejo',
+         'coração', 'tilápia', 'merluza', 'salmão', 'lagosta', 'mexilhão', 'porco', 'lombo', 'suíno', 'suína' 'lula', 'polvo',
+         'picanha', 'alcatra', 'maminha', 'kafta', 'maturatta', 'pato', 'fraldinha', 'asinha', 'acém', 'pernil', 'chorizo', 'paio',
+         'abrotea'
         ]
       end
 
       def bebidas_key_words
-        ['coca', 'cocacola', 'coca-cola' 'água', 'dolce', 'solúvel', 'energético', 'espresso', 'isotônico', 'nescau', 'suco', 'nectar',
-         'chá',  'fanta', 'guaraná', 'leite', 'café', 'toddynho', 'kuat', 'refrigerante', 'toddy', 'refresco', 'bebida', 'schweppes',
+        ['coca', 'cocacola', 'coca-cola', 'água', 'dolce', 'solúvel', 'energético', 'espresso', 'isotônico', 'nescau', 'suco', 'nectar',
+         'chá',  'fanta', 'guaraná', 'leite', 'café', 'toddynho', 'kuat', 'refrigerante', 'toddy', 'refresco', 'schweppes',
          'sprite', 'ades', 'h2oh', 'h2oh!', 'pepsi', 'gatorade'
         ]
       end
 
       def bebidas_alcoolicas_key_words
-        ['cerveja', 'vodka', 'whisky', 'catuaba', 'vinho', 'espumante', 'licor', 'saque', 'saquê', 'cachaça', 'conhaque',
-         'tequila', 'aperol', 'rum', 'gin', 'champagne'
+        ['cerveja', 'vodka', 'whisky', 'catuaba', 'vinho', 'espumante', 'licor', 'saque', 'saquê', 'cachaça', 'conhaque', 'tequila',
+         'aperol', 'rum', 'gin', 'champagne', 'long neck', 'chandon', 'chandom', 'whysky', 'whiskey', 'whiky', 'vermouth', 'vermute',
+         'absolut', 'aguardente', 'aguardardente'
         ]
       end
 
       def doces_key_words
-        ['bombom', 'bomboms', 'chocolate', 'condensado', 'sorvete', 'gelatina', 'geléia', 'bolo', 'bala', 'balas', 'panetone' 'chichlete',
-         'chicletes', 'creme de leite', 'bis', 'goiabada', 'doce', 'doces', 'paçoca', 'creme de avelã', 'chantily', 'confeito',
-         'confeitos', 'granulado', 'granulados', 'cobertura', 'marshmallow', 'mel', 'páscoa', 'pão de mel', 'alfajor', 'flan',
-         'brigadeiro', 'cocada', 'confeitaria', 'fondant', 'pé de moleque', 'mousse'
+        ['bombom',  'chocolate', 'leite condensado', 'sorvete', 'gelatina', 'geléia', 'bolo', 'bala', 'panetone' 'chichlete',
+         'creme de leite', 'bis', 'goiabada', 'doce', 'paçoca', 'creme de avelã', 'chantily', 'confeito', 'granulado', 'cobertura',
+         'marshmallow', 'mel', 'páscoa', 'pão de mel', 'alfajor', 'flan', 'brigadeiro', 'cocada', 'confeitaria', 'fondant',
+         'pé de moleque', 'mousse', 'abacaxi em calda', 'abacaxi fatiado em calda', 'wafer', 'waffle', 'torta'
         ]
       end
 
       def congelados_key_words
-        ['açai', 'nugget', 'nuggets', 'pão de queijo', 'pizza', 'congelado', 'congelada']
+        ['açai', 'açaí', 'nugget', 'pão de queijo', 'pizza', 'congelado', 'congelada', 'frooty', 'yakissoba', 'yakisoba']
       end
 
       def descartaveis_key_words
         ['papel higiênico', 'lixo', 'guardanapo', 'guardanapos', 'papel toalha', 'papel absorvente', 'lenço de papel',
-         'lenços de papel', 'pilha', 'pilhas', 'bateria', 'baterias', 'fósforo', 'fósforos', 'embalagem', 'embalagens', 'filtro de café',
-         'descartável', 'descartáveis', 'canudo', 'canudos', 'papel manteiga', 'papel alumínio', 'filme pvc', 'vela', 'velas', 'bexiga',
-         'bexigas'
+         'lenços de papel', 'pilha', 'bateria', 'fósforo', 'embalagem', 'filtro de café', 'descartável', 'descartáveis', 'canudo',
+         'papel manteiga', 'papel alumínio', 'filme pvc', 'vela', 'bexiga', 'organizador de alimentos'
         ]
       end
 
       def queijos_e_frios_key_words
-        ['queijo', 'queijos', 'requeijão', 'presunto', 'parmesão', 'salame', 'cream cheese', 'mussarela', 'muçarela',
-         'mortadela', 'ricota', 'copa', 'peito de peru'
+        ['queijo', 'requeijão', 'presunto', 'parmesão', 'salame', 'cream cheese', 'mussarela', 'muçarela', 'mortadela', 'ricota',
+         'copa', 'peito de peru'
         ]
       end
 
       def higiene_key_words
-        ['shampoo', 'sabonete', 'sabonetes', 'desodorante', 'desodorantes', 'condicionador', 'loção', 'cabelo', 'protetor solar',
-         'espuma de barbear', 'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação'
+        ['shampoo', 'sabonete', 'desodorante', 'condicionador', 'loção', 'cabelo', 'protetor solar', 'espuma de barbear',
+          'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação', 'colgate', 'sorriso', 'closeup',
+          'close up', 'alvejante', 'repelente', 'aborvente', 'absorvente', 'absovente', 'vanish', 'sbp', 'bom ar', 'aguarrás'
         ]
       end
 
       def hortifruti_key_words
-        ['temperos', 'tempero', 'erva', 'ervas', 'especiaria', 'especiarias', 'alface', 'tomate', 'uva', 'fruta', 'frutas', 'legume',
-         'legumes', 'batata', 'verdura', 'verduras', 'salada', 'saladas', 'cebola', 'banana', 'tapioca', 'laranja', 'maça', 'pepino',
-         'alho', 'cogumelo', 'cogumelos', 'castanha', 'farinha', 'farinhas', 'lilnhaça', 'alcachofra', 'ameixa', 'amêndoa', 'amêndoas',
-         'brócolis', 'limão', 'pera', 'pimentão', 'abobrinha', 'abóbora', 'beterraba', 'couve', 'cebolinha', 'cenoura', 'chia',
-         'gergelim', 'mexerica', 'folha', 'folhas', 'vagem', 'espinafre', 'manga', 'maracujá', 'melão', 'azeitona', 'azeitonas'
+        ['tempero', 'erva', 'especiaria', 'alface', 'tomate', 'uva', 'fruta', 'legume', 'batata', 'verdura', 'salada', 'cebola',
+         'banana', 'tapioca', 'laranja', 'maça', 'pepino',  'alho', 'cogumelo', 'castanha', 'farinha', 'lilnhaça', 'alcachofra',
+         'ameixa', 'amêndoa', 'brócolis', 'limão', 'pera', 'pimentão', 'abobrinha', 'abóbora', 'beterraba', 'couve', 'cebolinha',
+         'cenoura', 'chia', 'gergelim', 'mexerica', 'folha', 'vagem', 'espinafre', 'manga', 'maracujá', 'melão', 'azeitona',
+         'abacate', 'abacaxi', 'abobora', 'abóbora', 'morango', 'acelga', 'agriao', 'agrião', 'vegetal', 'vegetais', 'aipim',
+         'mandioquinha', 'macaxeira', 'macaxera'
         ]
       end
 
       def mercearia_key_words
         ['arroz', 'feijão', 'óleo', 'azeite', 'pão', 'pãezinhos', 'bisnaguinha', 'molho de tomate', 'macarrão', 'espaguete', 'penne',
-         'pipoca', 'milho', 'ervilha', 'palmito', 'palmitos', 'pimenta', 'shoyu', 'pastel', 'aceto', 'quinoa', 'grão de bico', 'lentilha'
+         'pipoca', 'milho', 'ervilha', 'palmito', 'pimenta', 'shoyu', 'pastel', 'aceto', 'quinoa', 'grão de bico', 'lentilha',
+         'açafrão', 'wrap', 'xarope', 'achocolatado', 'vinagre', 'açucar', 'açúcar', 'adoçante', 'tosta', 'tostata', 'trigo',
+         'torrada'
         ]
+      end
+
+      def beleza_key_words
+        ['1ka', 'ykas', 'zap', 'yellow ye', 'yellow kit', 'yellow profissional', 'yellow new', 'yellow form', 'yellow ativador',
+         'zero nó', 'ybera', 'bronzeado', 'protetor solar', 'wella', 'hidratante', 'lola cosmetics', "victoria's secret", 'truss',
+         'agilise', 'advance techniques', 'adstringente', 'siàge', 'haskell', 'senscience', 'esfoliante'
+        ]
+      end
+
+      def utensilios_key_words
+        ['bolas pvc para massagem', 'abridor de lata', 'taça', 'copo', 'vassoura', 'pá', 'rodo', 'acendedor', 'wahl', 'varal',
+         'tv led', 'adaptador', 'touca', 'gama italy'
+        ]
+      end
+
+      def outros_key_words
+        ['whey', 'v6', 'vaselina', 'vegetariano', 'albumina', 'midway']
       end
     end
   end

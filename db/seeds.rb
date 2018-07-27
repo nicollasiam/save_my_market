@@ -29,14 +29,17 @@ Market.create!([{ :name => "Home Refill",
                }])
 
 Category.create!([{ name: 'butchery' },
-                 { name: 'drinks' },
-                 { name: 'alcoholic_drinks' },
-                 { name: 'candy' },
-                 { name: 'frozen_food' },
-                 { name: 'frozen_food' },
-                 { name: 'disposable' },
-                 { name: 'cheese' },
-                 { name: 'hygiene' },
-                 { name: 'fruit_and_vegetables' },
-                 { name: 'grocers' }
+                  { name: 'drinks' },
+                  { name: 'alcoholic_drinks' },
+                  { name: 'candy' },
+                  { name: 'frozen_food' },
+                  { name: 'frozen_food' },
+                  { name: 'disposable' },
+                  { name: 'cheese' },
+                  { name: 'hygiene' },
+                  { name: 'fruit_and_vegetables' },
+                  { name: 'grocers' },
+                  { name: 'beauty' },
+                  { name: 'utensils' },
+                  { name: 'other' }
                  ])

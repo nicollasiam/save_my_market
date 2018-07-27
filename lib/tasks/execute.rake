@@ -101,7 +101,7 @@ namespace :execute do
   desc 'Categorize all new Products'
   task categorize_products: :environment do
     start_time = Time.now
-    puts "\nCleaning invalid data: start at #{start_time}"
+    puts "\nCategorizing: start at #{start_time}"
     Applications::CategorizeBot.categorize
     end_time = Time.now
     total_elapsed = end_time - start_time
