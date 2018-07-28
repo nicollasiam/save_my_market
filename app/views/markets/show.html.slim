@@ -5,17 +5,42 @@
         h1 = @market.name
 
     .row
-      .col-xs-12.d-flex
-        span = "Produtos encontrados: #{@products.count}"
+      .col-lg-10.offset-lg-2.d-flex.justify-content-between.align-items-end
+        / span
+        /   | Produtos encontrados:
+        /   span.ml-2.purple-number = "#{@products_count}"
+        .sort-wrapper
+          = link_to market_path(@market, sort: 'price_up') do
+            = icon('fas', 'sort-numeric-up', { class: 'px-2 '})
+
+          = link_to market_path(@market, sort: 'price_down') do
+            = icon('fas', 'sort-numeric-down', { class: 'px-2 '})
+
+          = link_to market_path(@market, sort: 'name_up') do
+            = icon('fas', 'sort-alpha-up', { class: 'px-2 '})
+
+          = link_to market_path(@market, sort: 'name_down') do
+            = icon('fas', 'sort-alpha-down', { class: 'px-2 '})
+
         = paginate @products, params: request.query_parameters, window: 2
 
     .row
-      - @products.each do |product|
-        .col-12.col-md-6.col-lg-3
-          .product-wrapper.py-3.my-1.text-center
-            = link_to '', market_product_path(product)
-            = image_tag product.image, height: 200
-            hr
-            .description-wrapper
-              h2 = product.name
-              span = product.price
+      .col-lg-2
+        - @category.each do |category|
+          .row
+            .col-lg-12
+              .category-wrapper.my-1.text-left
+                = link_to t("#{category.name}"),
+                          market_category_path(@market, category)
+
+      .col-lg-10
+        .row
+          - @products.each do |product|
+            .col-12.col-md-6.col-lg-3
+              .product-wrapper.py-3.my-1.text-center
+                = link_to '', market_product_path(product)
+                = image_tag product.image, height: 200
+                hr
+                .description-wrapper
+                  h2 = product.name
+                  span = product.price

@@ -31,5 +31,14 @@ module SaveMyMarket
     config.generators.system_tests = nil
 
     config.autoload_paths << Rails.root.join('business')
+
+    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
+    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
+    config.time_zone = 'Brasilia'
+    # ActiveRecord Timezone
+    config.active_record.default_timezone = :local
+
+    # i18n
+    config.i18n.default_locale = 'pt-BR'
   end
 end

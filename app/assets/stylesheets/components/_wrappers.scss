@@ -41,6 +41,27 @@
     padding-left: 5px;
   }
 
+  .sort-wrapper {
+    a {
+      text-decoration: none;
+      color: #6e6e6e;
+      font-size: 1.2rem;
+    }
+  }
+
+  .purple-number {
+    color: purple;
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+
+  .category-wrapper {
+    a {
+      text-decoration: none;
+      color: #6e6e6e;
+    }
+  }
+
   .product-wrapper {
     border-radius: 4px;
     border: 1px solid #e5e2e2;
@@ -53,7 +74,7 @@
 
     .description-wrapper {
       h2 {
-        font-size: 1.1rem;
+        font-size: .95rem;
         font-weight: 600;
         color: #6e6e6e;
         padding: 5px 20px;
