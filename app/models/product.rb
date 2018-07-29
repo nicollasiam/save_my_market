@@ -6,4 +6,6 @@ class Product < ApplicationRecord
 
   belongs_to :market, inverse_of: :products
   belongs_to :category, inverse_of: :products, optional: true
+
+  has_many :price_histories, inverse_of: :product, dependent: :destroy
 end

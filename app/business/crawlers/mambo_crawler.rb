@@ -5,6 +5,7 @@ module Crawlers
     # This is because I derectly got the weird categories urls
     # so I could access directily
     MAMBO_MODEL = Market.find_by(name: 'Mambo')
+    MAMBO_PRODUCTS = MAMBO_MODEL.products.pluck(:name)
 
     require 'nokogiri'
     require 'open-uri'
@@ -48,14 +49,37 @@ module Crawlers
         category.each do |product_url|
           product = Nokogiri::HTML(open(product_url.attr('data-url')))
 
+          product_name = product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip
           price = product.css('[itemscope]').css('[itemprop=offers]').css('[itemprop=price]').attr('content').value().strip.to_f
 
-          # puts "#{product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip}: #{price}"
-          @products << { name: product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip,
-                         price: price,
-                         image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
-                         market_name: 'mambo'
-                       }
+          # Product already exists in database
+          if MAMBO_PRODUCTS.include?(product_name)
+            product = Product.where(name: product_name, market: MAMBO_MODEL)
+
+            # check if price changed
+            # do nothing if it did not
+            if product.price_histories.last.price != price
+              # if it changed, create a new price history and add it to the product
+              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+                                              current_price: price,
+                                              product: product)
+
+              product.update(price: price)
+            end
+          else
+            # This is a new product
+            # add it to the database
+            product = Product.create(name: product_name,
+                                      price: price,
+                                      image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
+                                      market_name: 'mambo',
+                                      market: MAMBO_MODEL)
+
+            # create the first price history
+            new_price = PriceHistory.create(old_price: 0,
+                                            current_price: price,
+                                            product: product)
+          end
         end
       end
 

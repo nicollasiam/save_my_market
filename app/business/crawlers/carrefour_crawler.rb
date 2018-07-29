@@ -4,6 +4,7 @@ module Crawlers
     CARREFOUR_HOME_URL = 'https://www.carrefour.com.br/dicas/mercado'.freeze
 
     CARREFOUR_MODEL = Market.find_by(name: 'Carrefour')
+    CARREFOUR_PRODUCTS = CARREFOUR_MODEL.products.pluck(:name)
 
     require 'nokogiri'
     require 'open-uri'
@@ -41,28 +42,46 @@ module Crawlers
             puts "Erro! Vida que segue!"
           end
         end
-
-        @products.uniq.each do |product_hash|
-          product = Product.new(product_hash)
-          product.market = CARREFOUR_MODEL
-          product.save
-        end
       end
 
       private
 
       def loop_through_category(category)
         category.css('.prd-info').each do |product|
+          product_name = product.css('.prd-name').text().strip
           price = product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f
+
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
 
-          # puts "#{product.css('.prd-name').text().strip}: #{price}"
-          @products << { name: product.css('.prd-name').text().strip,
-                         price: price,
-                         image: '',
-                         market_name: 'carrefour'
-                       }
+          # Product already exists in database
+          if CARREFOUR_PRODUCTS.include?(product_name)
+            product = Product.where(name: product_name, market: CARREFOUR_MODEL)
+
+            # check if price changed
+            # do nothing if it did not
+            if product.price_histories.last.price != price
+              # if it changed, create a new price history and add it to the product
+              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+                                              current_price: price,
+                                              product: product)
+
+              product.update(price: price)
+            end
+          else
+            # This is a new product
+            # add it to the database
+            product = Product.create(name: product_name,
+                                      price: price,
+                                      image: '',
+                                      market_name: 'carrefour',
+                                      market: CARREFOUR_MODEL)
+
+            # create the first price history
+            new_price = PriceHistory.create(old_price: 0,
+                                            current_price: price,
+                                            product: product)
+          end
         end
       end
     end

@@ -2,6 +2,7 @@ module Crawlers
   class DiaCrawler
     DIA_BASE_URL = 'https://www.dia.com.br/'.freeze
     DIA_MODEL = Market.find_by(name: 'Dia')
+    DIA_PRODUCTS = DIA_MODEL.products.pluck(:name)
 
     require 'nokogiri'
     require 'open-uri'
@@ -53,16 +54,40 @@ module Crawlers
           product_url = element.attr('href')
           product = Nokogiri::HTML(open("#{DIA_BASE_URL}#{product_url}"))
 
+          product_name = product.css('h1.nameProduct').text().strip
           price = product.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f
+
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
 
-          # puts "#{product.css('h1.nameProduct').text().strip}: #{price}"
-          @products << { name: product.css('h1.nameProduct').text().strip,
-                         price: price,
-                         image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
-                         market_name: 'dia'
-                       }
+          # Product already exists in database
+          if DIA_PRODUCTS.include?(product_name)
+            product = Product.where(name: product_name, market: DIA_MODEL)
+
+            # check if price changed
+            # do nothing if it did not
+            if product.price_histories.last.price != price
+              # if it changed, create a new price history and add it to the product
+              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+                                              current_price: price,
+                                              product: product)
+
+              product.update(price: price)
+            end
+          else
+            # This is a new product
+            # add it to the database
+            product = Product.create(name: product_name,
+                                      price: price,
+                                      image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
+                                      market_name: 'dia',
+                                      market: DIA_MODEL)
+
+            # create the first price history
+            new_price = PriceHistory.create(old_price: 0,
+                                            current_price: price,
+                                            product: product)
+          end
         end
       end
     end

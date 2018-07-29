@@ -1,23 +1,17 @@
-class MarketsController < ApplicationController
-  before_action :set_market, only: %i(show)
-
-  def index
-    @markets = Market.all
-  end
-
+class CategoriesController < ApplicationController
   def show
-    @category = Category.all
+    @market = Market.friendly.find(params[:market_id])
+    @category = Category.friendly.find(params[:id])
+    @all_categories = Category.all
+
     get_products
   end
 
   private
 
-  def set_market
-    @market = Market.friendly.find(params[:id])
-  end
-
   def get_products
-    @products = @market.products.order(:name, created_at: :desc)
+    debugger
+    @products = @products = @category.products.where(market: @market).order(:name, created_at: :desc)
 
     @products_count = @products.count
     order_products if params[:sort]

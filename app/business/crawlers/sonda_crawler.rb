@@ -2,6 +2,7 @@ module Crawlers
   class SondaCrawler
     SONDA_BASE_URL = 'https://www.sondadelivery.com.br/'.freeze
     SONDA_MODEL = Market.find_by(name: 'Sonda')
+    SONDA_PRODUCTS = SONDA_MODEL.products.pluck(:name)
 
     require 'nokogiri'
     require 'open-uri'
@@ -52,14 +53,41 @@ module Crawlers
 
       def loop_through_category(category)
         category.css('.product').each do |product|
+
+          product_name = product.css('.product--info .tit').text().strip
           price = product.css('.product--info .price').text().strip.gsub(',', '.').to_f
 
-          # puts "#{product.css('.product--info .tit').text().strip}: #{price}"
-          @products << { name: product.css('.product--info .tit').text().strip,
-                         price: price,
-                         image: (product.css('.lnk img').attr('src').value().strip rescue ''),
-                         market_name: 'sonda'
-                       }
+          # If the price is zero, this and next products are not availble anymore
+          break if price.zero?
+
+          # Product already exists in database
+          if SONDA_PRODUCTS.include?(product_name)
+            product = Product.where(name: product_name, market: SONDA_MODEL)
+
+            # check if price changed
+            # do nothing if it did not
+            if product.price_histories.last.price != price
+              # if it changed, create a new price history and add it to the product
+              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+                                              current_price: price,
+                                              product: product)
+
+              product.update(price: price)
+            end
+          else
+            # This is a new product
+            # add it to the database
+            product = Product.create(name: product_name,
+                                      price: price,
+                                      image: (product.css('.lnk img').attr('src').value().strip rescue ''),
+                                      market_name: 'sonda',
+                                      market: SONDA_MODEL)
+
+            # create the first price history
+            new_price = PriceHistory.create(old_price: 0,
+                                            current_price: price,
+                                            product: product)
+          end
         end
       end
     end
