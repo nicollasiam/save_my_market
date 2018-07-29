@@ -10,7 +10,6 @@ class CategoriesController < ApplicationController
   private
 
   def get_products
-    debugger
     @products = @products = @category.products.where(market: @market).order(:name, created_at: :desc)
 
     @products_count = @products.count
