@@ -42,5 +42,5 @@
                 = image_tag product.image, height: 200
                 hr
                 .description-wrapper
-                  h2 = product.name
+                  h2 = link_to product.name, market_product_path(@market, product)
                   span = product.price

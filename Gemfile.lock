@@ -64,6 +64,8 @@ GEM
     breadcrumbs_on_rails (3.0.1)
     builder (3.2.3)
     byebug (10.0.2)
+    chartjs-ror (3.6.2)
+      rails (>= 3.1)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
     dotenv (2.5.0)
@@ -216,6 +218,7 @@ DEPENDENCIES
   bootstrap (~> 4.0.0)
   breadcrumbs_on_rails
   byebug
+  chartjs-ror
   dotenv-rails (~> 2.1)
   faker!
   font-awesome-sass (~> 5.0.13)
