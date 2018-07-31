@@ -58,6 +58,8 @@ module Crawlers
           product_name = product['name'].strip
           price = product['currentPrice']
 
+          next if include_wrong_encoding_chars?(product_name)
+
           # Product already exists in database
           if EXTRA_PRODUCTS.include?(product_name)
             product = Product.find_by(name: product_name, market: EXTRA_MODEL)
@@ -90,6 +92,12 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
+      end
+
+      def include_wrong_encoding_chars?(product_name)
+        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
+
+        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end

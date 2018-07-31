@@ -52,6 +52,8 @@ module Crawlers
           price = product_hash.first['items'].first['unitMultiplier'].to_f *
                   product_hash.first['items'].first['sellers'].first['commertialOffer']['Installments'].first['Value'].to_f
 
+          next if include_wrong_encoding_chars?(product_name)
+
           # Product already exists in database
           if MAMBO_PRODUCTS.include?(product_name)
             product = Product.find_by(name: product_name, market: MAMBO_MODEL)
@@ -111,6 +113,12 @@ module Crawlers
           'https://www.mambo.com.br/buscapagina?fq=C%3a%2f154%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
           # petshop
           'https://www.mambo.com.br/buscapagina?fq=C%3a%2f134%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=']
+      end
+
+      def include_wrong_encoding_chars?(product_name)
+        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
+
+        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end

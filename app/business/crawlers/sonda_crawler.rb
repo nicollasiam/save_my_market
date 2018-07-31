@@ -53,6 +53,7 @@ module Crawlers
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
+          next if include_wrong_encoding_chars?(product_name)
 
           # Product already exists in database
           if SONDA_PRODUCTS.include?(product_name)
@@ -86,6 +87,12 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
+      end
+
+      def include_wrong_encoding_chars?(product_name)
+        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
+
+        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end
