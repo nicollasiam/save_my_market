@@ -7,6 +7,8 @@ module Crawlers
     MAMBO_MODEL = Market.find_by(name: 'Mambo')
     MAMBO_PRODUCTS = MAMBO_MODEL.products.pluck(:name)
 
+    MAMBO_API = 'https://www.mambo.com.br/api/catalog_system/pub/products/search/?fq=productId:'.freeze
+
     require 'nokogiri'
     require 'open-uri'
 
@@ -35,12 +37,6 @@ module Crawlers
 
           page_number = 1
         end
-
-        @products.uniq.each do |product_hash|
-          product = Product.new(product_hash)
-          product.market = MAMBO_MODEL
-          product.save
-        end
       end
 
       private
@@ -48,23 +44,28 @@ module Crawlers
       def loop_through_category(category)
         category.each do |product_url|
           product = Nokogiri::HTML(open(product_url.attr('data-url')))
+          item_id = product.css('[itemscope]').css('[itemprop=productID]').attr('content').value().strip
 
-          product_name = product.css('[itemscope]').css('[itemprop=name]').attr('content').value().strip
-          price = product.css('[itemscope]').css('[itemprop=offers]').css('[itemprop=price]').attr('content').value().strip.to_f
+          product_hash = JSON.parse(Nokogiri::HTML(open("#{MAMBO_API}#{item_id}")))
+
+          product_name = product_hash.first['productName']
+          price = product_hash.first['items'].first['unitMultiplier'].to_f *
+                  product_hash.first['items'].first['sellers'].first['commertialOffer']['Installments'].first['Value'].to_f
 
           # Product already exists in database
           if MAMBO_PRODUCTS.include?(product_name)
-            product = Product.where(name: product_name, market: MAMBO_MODEL)
+            product = Product.find_by(name: product_name, market: MAMBO_MODEL)
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.last.price != price
+            if product.price_histories.last.current_price != price
               # if it changed, create a new price history and add it to the product
-              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+              new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
                                               product: product)
 
               product.update(price: price)
+              puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             end
           else
             # This is a new product
@@ -79,6 +80,8 @@ module Crawlers
             new_price = PriceHistory.create(old_price: 0,
                                             current_price: price,
                                             product: product)
+
+            puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
       end

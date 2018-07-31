@@ -223,7 +223,7 @@ module Applications
         ['shampoo', 'sabonete', 'desodorante', 'condicionador', 'loção', 'cabelo', 'protetor solar', 'espuma de barbear',
          'creme de barbear', 'creme depilatório', 'talco', 'cera', 'menstrual', 'menstruação', 'colgate', 'sorriso', 'closeup',
          'close up', 'alvejante', 'repelente', 'aborvente', 'absorvente', 'absovente', 'vanish', 'sbp', 'bom ar', 'aguarrás',
-         'álcool', 'alcool', 'escova de dente', 'grand prix', 'pasta de dente', 'creme dental'
+         'álcool', 'alcool', 'escova de dente', 'grand prix', 'pasta de dente', 'creme dental', 'amaciante', 'sabão'
         ]
       end
 

@@ -47,12 +47,6 @@ module Crawlers
           last_page = false
           page = 0
         end
-
-        @products.uniq.each do |product_hash|
-          product = Product.new(product_hash)
-          product.market = EXTRA_MODEL
-          product.save
-        end
       end
 
       private
@@ -66,17 +60,18 @@ module Crawlers
 
           # Product already exists in database
           if EXTRA_PRODUCTS.include?(product_name)
-            product = Product.where(name: product_name, market: EXTRA_MODEL)
+            product = Product.find_by(name: product_name, market: EXTRA_MODEL)
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.last.price != price
+            if product.price_histories.last.current_price != price
               # if it changed, create a new price history and add it to the product
-              new_price = PriceHistory.create(old_price: product.price_histories.last.price,
+              new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
                                               product: product)
 
               product.update(price: price)
+              puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             end
           else
             # This is a new product
@@ -91,6 +86,8 @@ module Crawlers
             new_price = PriceHistory.create(old_price: 0,
                                             current_price: price,
                                             product: product)
+
+            puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
       end
