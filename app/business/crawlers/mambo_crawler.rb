@@ -49,8 +49,9 @@ module Crawlers
           product_hash = JSON.parse(Nokogiri::HTML(open("#{MAMBO_API}#{item_id}")))
 
           product_name = product_hash.first['productName']
-          price = product_hash.first['items'].first['unitMultiplier'].to_f *
-                  product_hash.first['items'].first['sellers'].first['commertialOffer']['Installments'].first['Value'].to_f
+          price = (product_hash.first['items'].first['unitMultiplier'].to_f *
+                            product_hash.first['items'].first['sellers'].first['commertialOffer']['Installments'].first['Value'].to_f)
+                            .round(2)
 
           next if include_wrong_encoding_chars?(product_name)
 
