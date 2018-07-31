@@ -1,5 +1,5 @@
 module Crawlers
-  class DiaCrawler
+  class DiaCrawler < ApplicationCrawler
     DIA_BASE_URL = 'https://www.dia.com.br/'.freeze
     DIA_MODEL = Market.find_by(name: 'Dia')
     DIA_PRODUCTS = DIA_MODEL.products.pluck(:name)
@@ -90,8 +90,6 @@ module Crawlers
       end
 
       def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
-
         wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end

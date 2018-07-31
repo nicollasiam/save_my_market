@@ -1,5 +1,5 @@
 module Crawlers
-  class ExtraCrawler
+  class ExtraCrawler < ApplicationCrawler
     # Extra uses Angular apps
     # which means that the calls are made through an api
     # and the responses are a bunch os JSONs
@@ -95,8 +95,6 @@ module Crawlers
       end
 
       def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
-
         wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end

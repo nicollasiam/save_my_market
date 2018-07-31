@@ -1,5 +1,5 @@
 module Crawlers
-  class CarrefourCrawler
+  class CarrefourCrawler < ApplicationCrawler
     CARREFOUR_BASE_URL = 'https://www.carrefour.com.br'.freeze
     CARREFOUR_HOME_URL = 'https://www.carrefour.com.br/dicas/mercado'.freeze
 
@@ -90,8 +90,6 @@ module Crawlers
       end
 
       def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
-
         wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end

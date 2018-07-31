@@ -1,5 +1,5 @@
 module Crawlers
-  class HomeRefillCrawler
+  class HomeRefillCrawler < ApplicationCrawler
     HOME_REFILL_BASE_URL = 'https://www.homerefill.com.br/'.freeze
     HOME_REFILL_MODEL = Market.find_by(name: 'Home Refill')
     HOME_REFILL_PRODUCTS = HOME_REFILL_MODEL.products.pluck(:name)
@@ -91,8 +91,6 @@ module Crawlers
       end
 
       def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
-
         wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end

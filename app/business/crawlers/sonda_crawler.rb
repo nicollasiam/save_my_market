@@ -1,5 +1,5 @@
 module Crawlers
-  class SondaCrawler
+  class SondaCrawler < ApplicationCrawler
     SONDA_BASE_URL = 'https://www.sondadelivery.com.br/'.freeze
     SONDA_MODEL = Market.find_by(name: 'Sonda')
     SONDA_PRODUCTS = SONDA_MODEL.products.pluck(:name)
@@ -90,8 +90,6 @@ module Crawlers
       end
 
       def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars = ["\u0081", 'Ã³', 'Ã§', 'Ã¢', "\u0083O", 'Ãª', 'Ã¡', 'Ã£', "\u0089", "\u0094", "\u0093"]
-
         wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
