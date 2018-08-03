@@ -5,4 +5,8 @@ Rails.application.routes.draw do
     resources :products, only: :show
     resources :categories, only: :show
   end
+
+  namespace :products do
+    get 'search'
+  end
 end

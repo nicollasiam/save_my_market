@@ -1,48 +1,36 @@
 .all-products-wrapper
   .container
-    .row
-      .col-xs-12
-        h1 = @market.name
 
     - if @products.any?
       .row
-        .col-lg-10.offset-lg-2.d-flex.justify-content-between.align-items-end
+        .col-lg-12.d-flex.justify-content-between.align-items-end
           .sort-wrapper
-            = link_to market_path(@market, sort: 'price_up') do
+            = link_to products_search_path(sort: 'price_up', search: params[:search]) do
               = icon('fas', 'sort-numeric-up', { class: 'px-2 '})
 
-            = link_to market_path(@market, sort: 'price_down') do
+            = link_to products_search_path(sort: 'price_down', search: params[:search]) do
               = icon('fas', 'sort-numeric-down', { class: 'px-2 '})
 
-            = link_to market_path(@market, sort: 'name_up') do
+            = link_to products_search_path(sort: 'name_up', search: params[:search]) do
               = icon('fas', 'sort-alpha-up', { class: 'px-2 '})
 
-            = link_to market_path(@market, sort: 'name_down') do
+            = link_to products_search_path(sort: 'name_down', search: params[:search]) do
               = icon('fas', 'sort-alpha-down', { class: 'px-2 '})
 
           = paginate @products, params: request.query_parameters, window: 2
 
-    .row
-      .col-lg-2
-        - @category.each do |category|
-          .row
-            .col-lg-12
-              .category-wrapper.my-1.text-left
-                = link_to t("#{category.name}"),
-                          market_category_path(@market, category)
-
-      .col-lg-10
+      .col-lg-12
         .row
           - @products.each do |product|
             .col-12.col-md-6.col-lg-4
               .product-wrapper.py-3.my-1.text-center
                 .image-wrapper
-                  = link_to '', market_product_path(@market, product)
+                  = link_to '', market_product_path(product.market, product)
                   = image_tag product.image, height: 200
                 .store-wrapper.d-flex.justify-content-between.align-items-center.py-3
                   hr
                   = image_tag product.market.logo, height: 40, width: 80
                   hr
                 .description-wrapper
-                  h2 = link_to product.name, market_product_path(@market, product)
+                  h2 = link_to product.name, market_product_path(product.market, product)
                   span = product.price

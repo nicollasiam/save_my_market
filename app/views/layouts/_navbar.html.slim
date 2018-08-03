@@ -1,7 +1,9 @@
 .navbar-wrapper
   nav.navbar.navbar-light.justify-content-between.container
-    = link_to 'Navbar', '#', class: 'navbar-brand'
+    = link_to 'Navbar', root_path, class: 'navbar-brand'
 
-    form.form-inline
-      input.form-control.mr-sm-2 type="search" placeholder="Search" aria-label="Search"
-      button.btn.btn-outline-success.my-2.my-sm-0 type="submit" Search/button
+    .navbar-search
+      = simple_form_for :product, url: products_search_path, method: :get, html: { class: 'my-2' } do
+        = text_field_tag :search, nil, placeholder: 'Digite aqui o que você procura'
+        = button_tag do
+          = icon('fas', 'search')

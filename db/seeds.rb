@@ -25,7 +25,7 @@ Market.create!([{ :name => "Home Refill",
                  :logo => "http://marcioantunes2.cmisites.com.br/wp-content/uploads/sites/394/2017/12/extra.jpg"
                },
                { :name => "Mambo",
-                 :logo => "https://www.pegadesconto.com.br/wp-content/uploads/mambo-delivery-logotipo-191x115.png"
+                 :logo => "https://mambo.vteximg.com.br/arquivos/mambo-logo-small.png"
                }])
 
 Category.create!([{ name: 'butchery' },

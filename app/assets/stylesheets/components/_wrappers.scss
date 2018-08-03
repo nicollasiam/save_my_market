@@ -69,10 +69,20 @@
     position: relative;
 
     hr {
-      width: 80%;
+      width: 25%;
+    }
+
+    .image-wrapper {
+      background: white;
+    }
+
+    .store-wrapper {
+      background: transparent;
     }
 
     .description-wrapper {
+      background: transparent;
+
       h2 {
         font-size: .95rem;
         font-weight: 600;
