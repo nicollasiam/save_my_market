@@ -24,12 +24,7 @@
 
     .row
       .col-lg-2
-        - @category.each do |category|
-          .row
-            .col-lg-12
-              .category-wrapper.my-1.text-left
-                = link_to t("#{category.name}"),
-                          market_category_path(@market, category)
+        = render 'categories/categories_sidenav', market: @market
 
       .col-lg-10
         .row

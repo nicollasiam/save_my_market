@@ -1,0 +1,6 @@
+- @all_categories.each do |category|
+  .row
+    .col-lg-12
+      .category-wrapper.my-1.text-left
+        = link_to t("#{category.name}"),
+                  market_category_path(market, category)

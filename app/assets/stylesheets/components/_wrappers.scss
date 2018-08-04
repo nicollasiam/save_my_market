@@ -55,13 +55,6 @@
     font-size: 1.4rem;
   }
 
-  .category-wrapper {
-    a {
-      text-decoration: none;
-      color: #6e6e6e;
-    }
-  }
-
   .product-wrapper {
     border-radius: 4px;
     border: 1px solid #e5e2e2;
@@ -144,5 +137,12 @@
         padding-bottom: 15px;
       }
     }
+  }
+}
+
+.category-wrapper {
+  a {
+    text-decoration: none;
+    color: #6e6e6e;
   }
 }

@@ -1,9 +1,13 @@
 .container.all-market-wrapper
   .row
-    - @markets.each do |market|
-      .col-12.col-md-6.col-lg-4
-        .market-wrapper.py-3.my-4.text-center
-          = link_to '', market
-          = image_tag market.logo, height: 80, width: 200
-          hr
-          h2 = market.name
+    .col-lg-2
+      = render 'categories/categories_sidenav', market: 0
+    .col-lg-10
+      .row
+        - @markets.each do |market|
+          .col-12.col-md-6.col-lg-4
+            .market-wrapper.py-3.text-center
+              = link_to '', market
+              = image_tag market.logo, height: 80, width: 200
+              hr
+              h2 = market.name

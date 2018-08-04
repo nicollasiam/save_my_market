@@ -36,8 +36,8 @@ class ProductsController < ApplicationController
   end
 
   def order_products
-    @products = @products.joins(:price_histories).order('price_histories.current_price DESC') if params[:sort] == 'price_up'
-    @products = @products.joins(:price_histories).order('price_histories.current_price ASC') if params[:sort] == 'price_down'
+    @products = @products.order(price: :desc) if params[:sort] == 'price_up'
+    @products = @products.order(price: :asc) if params[:sort] == 'price_down'
     @products.order!(name: :desc) if params[:sort] == 'name_up'
     @products.order!(name: :asc) if params[:sort] == 'name_down'
   end
