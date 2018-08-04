@@ -33,16 +33,4 @@
 
       .col-lg-10
         .row
-          - @products.each do |product|
-            .col-12.col-md-6.col-lg-4
-              .product-wrapper.py-3.my-1.text-center
-                .image-wrapper
-                  = link_to '', market_product_path(@market, product)
-                  = image_tag product.image, height: 200
-                .store-wrapper.d-flex.justify-content-between.align-items-center.py-3
-                  hr
-                  = image_tag product.market.logo, height: 40, width: 80
-                  hr
-                .description-wrapper
-                  h2 = link_to product.name, market_product_path(@market, product)
-                  span = product.price
+          = render 'products/products_show'

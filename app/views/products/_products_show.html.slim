@@ -1,0 +1,21 @@
+- @products.each do |product|
+  .col-12.col-md-6.col-lg-4
+    .product-wrapper.py-3.my-1.text-center
+      .image-wrapper.d-flex.justify-content-center.align-items-center style='min-height: 200px'
+        = link_to '', market_product_path(product.market, product)
+
+        - if !product.image.blank?
+          = image_tag product.image, height: 200
+        - else
+          = image_tag 'https://www.globalmixx.com.br/wp-content/themes/globalmix/static/img/imgError.png', height: 100
+
+        = simple_form_for '', url: root_path, method: :get do
+          = button_tag do
+            = icon('fas', 'cart-plus')
+      .store-wrapper.d-flex.justify-content-between.align-items-center.py-3
+        hr
+        = image_tag product.market.logo, height: 40, width: 80
+        hr
+      .description-wrapper
+        h2 = link_to product.name, market_product_path(product.market, product)
+        span = product.price

@@ -35,12 +35,4 @@
 
       .col-lg-10
         .row
-          - @products.each do |product|
-            .col-12.col-md-6.col-lg-4
-              .product-wrapper.py-3.my-1.text-center
-                = link_to '', market_product_path(product)
-                = image_tag product.image, height: 200
-                hr
-                .description-wrapper
-                  h2 = product.name
-                  span = product.price
+          = render 'products/products_show'
