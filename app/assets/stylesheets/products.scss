@@ -1,3 +1,17 @@
 // Place all the styles related to the products controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// Show view
+.product-image {
+  img {
+    min-width: 100%;
+  }
+}
+
+.product-info {
+  h1 {
+    color: purple;
+    font-size: 2em;
+  }
+}

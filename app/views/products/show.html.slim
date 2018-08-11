@@ -1,1 +1,33 @@
-= line_chart @data
+.container
+  .row
+    .col-lg-4
+      .product-image
+        = image_tag @product.image
+
+    .offset-lg-1.col-lg-7
+      .product-info
+        .row
+          .col-lg-12.d-flex.align-items-center
+            h1 = @product.name
+            = image_tag @product.market.logo, height: 40, width: 80
+        .row
+          .col-lg-12
+            table.table
+              tbody
+                tr
+                  th Data de Cadastro
+                  td = registration_date(@product)
+                tr
+                  th Preço na data de cadastro
+                  td = format_currency(registration_price(@product))
+                tr
+                  th Menor Preço Histórico
+                  td = "#{format_currency(minimum_price(@product))} em #{minimum_price_date(@product)}"
+                tr
+                  th Maior Preço Histórico
+                  td = "#{format_currency(maximum_price(@product))} em #{maximum_price_date(@product)}"
+                tr
+                  th Variações de Preço desde cadastro
+                  td = @product.price_histories.count
+
+
