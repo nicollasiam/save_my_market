@@ -11,6 +11,9 @@
             h1 = @product.name
             = image_tag @product.market.logo, height: 40, width: 80
         .row
+          .col-lg-12.text-left
+            h2 = format_currency(@product.price)
+        .row
           .col-lg-12
             table.table
               tbody
@@ -28,6 +31,15 @@
                   td = "#{format_currency(maximum_price(@product))} em #{maximum_price_date(@product)}"
                 tr
                   th Variações de Preço desde cadastro
-                  td = @product.price_histories.count
+                  td = @product.price_histories.count - 1
+                tr
+                  th Variação em uma semana
+                  td style=(week_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{week_variation(@product)}%"
+                tr
+                  th Variação em um mês
+                  td style=(month_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{month_variation(@product)}%"
+  .row
+    .col-lg-12
+      = line_chart @data, @options
 
 

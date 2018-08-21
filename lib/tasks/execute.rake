@@ -111,10 +111,24 @@ namespace :execute do
     puts "TEMPO TOTAL DECORRIDO: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
   end
 
+  desc 'Treat sick data'
+  task fix_sick_data: :environment do
+    start_time = Time.now
+    puts "\nTreating: start at #{start_time}"
+    Applications::NurseBot.treat_injuries
+    end_time = Time.now
+    total_elapsed = end_time - start_time
+    hours = ((total_elapsed / 60) / 60).to_i
+    minutes = ((total_elapsed / 60) % 60).to_i
+    seconds = (total_elapsed - (hours * 60 * 60) - (minutes * 60)).to_i
+    puts "TEMPO TOTAL DECORRIDO: #{hours} horas, #{minutes} minutos e #{seconds} segundos"
+  end
+
   desc 'Run all tasks'
   task run_all_tasks: [:environment,
                        'execute:run_all_crawlers',
                        'execute:clear_invalid_data',
+                       'execute:fix_sick_data',
                        'execute:categorize_products'
                       ]
 end

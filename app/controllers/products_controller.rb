@@ -11,15 +11,21 @@ class ProductsController < ApplicationController
     @product = Product.friendly.find(params[:id])
 
     @data = {
-      labels: @product.price_histories.map(&:created_at),
+      labels: @product.price_histories.map { |date| date.created_at.strftime('%d/%m/%Y') },
       datasets: [
         {
-          label: "My First dataset",
+          label: "Preços",
           background_color: "rgba(220,220,220,0.2)",
           border_color: "rgba(220,220,220,1)",
           data: @product.price_histories.map(&:current_price)
         }
       ]
+    }
+
+    @options = {
+      lineTension: 0,
+      pointRadius: 2,
+      pointBackgroundColor: '#ffa500'
     }
   end
 

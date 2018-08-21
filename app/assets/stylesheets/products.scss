@@ -5,13 +5,18 @@
 // Show view
 .product-image {
   img {
-    min-width: 100%;
+    width: 100%;
   }
 }
 
 .product-info {
   h1 {
     color: purple;
+    font-size: 2em;
+  }
+
+  h2 {
+    color: orange;
     font-size: 2em;
   }
 }
