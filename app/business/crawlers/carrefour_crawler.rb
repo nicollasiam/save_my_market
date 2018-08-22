@@ -47,10 +47,10 @@ module Crawlers
 
       def loop_through_category(category)
         category.css('[itemprop=itemListElement]').each_with_index do |product_html, index|
-          # product_name = product.css('.prd-name').text().strip
-          # price = product.css('.prd-price-new').text().gsub('R$', '').gsub(',', '.').strip.to_f
           product_name = product_html.css('[itemprop=name]')[index].attr('content').strip
           price = product_html.css('[name=productPostPrice]')[index].attr('value').strip.to_f
+          product_url = product_html.css('[itemprop=url]')[index].attr('content').strip
+
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
           next if include_wrong_encoding_chars?(product_name)
@@ -68,18 +68,18 @@ module Crawlers
                                               product: product)
 
               # Remove image when all products have its image updated.
-              puts 'SEM IMAGEM' if product_html.css('[itemprop=image]')[index].attr('data-src').strip.blank?
+              puts 'SEM IMAGEM' if product.image.blank?
               product.update(price: price,
                              image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''))
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             # Remove this else when all products have its image updated.
             else
-              puts 'SEM IMAGEM' if product_html.css('[itemprop=image]')[index].attr('data-src').strip.blank?
+              puts 'SEM IMAGEM' if product.image.blank?
               # Carrefour had no images. Update this attribute.
               product.update(image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''))
             end
           else
-            puts 'SEM IMAGEM' if product_html.css('[itemprop=image]')[index].attr('data-src').strip.blank?
+            puts 'SEM IMAGEM' if product.image.blank?
             # This is a new product
             # add it to the database
             product = Product.create(name: product_name,

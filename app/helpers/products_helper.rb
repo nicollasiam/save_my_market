@@ -33,11 +33,24 @@ module ProductsHelper
   end
 
   def month_variation(product)
-    month_price =( product.price_histories
+    month_price = (product.price_histories
                          .order(created_at: :asc)
                          .where('created_at >= ?', Time.zone.now - 1.month)
                          .first.current_price rescue nil)
 
     month_price.nil? ? 0.0 : (((product.price - month_price) * 100) / month_price).round(2)
+  end
+
+  def weekly_villains
+    products = Product.where('week_variation < 200')
+                      .where.not(market: Market.find_by(name: 'Carrefour'))
+                      .order(week_variation: :desc)
+                      .limit(10)
+  end
+
+  def weekly_heroes
+    products = Product.where.not(market: Market.find_by(name: 'Carrefour'))
+                      .order(week_variation: :asc)
+                      .limit(10)
   end
 end
