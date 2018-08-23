@@ -47,13 +47,16 @@ module Crawlers
 
       def loop_through_category(category)
         category.css('.product').each do |product|
-
           product_name = product.css('.product--info .tit').text().strip
           price = product.css('.product--info .price').text().strip.gsub(',', '.').to_f
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
           next if include_wrong_encoding_chars?(product_name)
+
+          # Fix product name if it has wrong encoding
+          # So it is not added again in the database
+          product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
           # Product already exists in database
           if SONDA_PRODUCTS.include?(product_name)
@@ -67,8 +70,11 @@ module Crawlers
                                               current_price: price,
                                               product: product)
 
-              product.update(price: price)
+              product.update(price: price,
+                             url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
+            else
+              product.update(url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
             end
           else
             # This is a new product
@@ -77,7 +83,8 @@ module Crawlers
                                       price: price,
                                       image: (product.css('.lnk img').attr('src').value().strip rescue ''),
                                       market_name: 'sonda',
-                                      market: SONDA_MODEL)
+                                      market: SONDA_MODEL,
+                                      url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,
@@ -87,10 +94,6 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
-      end
-
-      def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end

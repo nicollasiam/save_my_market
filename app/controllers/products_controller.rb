@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
           label: "Preços",
           background_color: "rgba(220,220,220,0.2)",
           border_color: "rgba(220,220,220,1)",
-          data: @product.price_histories.map(&:current_price)
+          data: @product.price_histories.order(created_at: :asc).map(&:current_price)
         }
       ]
     }

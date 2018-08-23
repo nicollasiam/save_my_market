@@ -18,4 +18,4 @@
         hr
       .description-wrapper
         h2 = link_to product.name, market_product_path(product.market, product)
-        span = product.price
+        span = format_currency(product.price)

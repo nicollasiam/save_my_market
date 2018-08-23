@@ -55,6 +55,10 @@ module Crawlers
           break if price.zero?
           next if include_wrong_encoding_chars?(product_name)
 
+          # Fix product name if it has wrong encoding
+          # So it is not added again in the database
+          product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
+
           # Product already exists in database
           if CARREFOUR_PRODUCTS.include?(product_name)
             product = Product.find_by(name: product_name, market: CARREFOUR_MODEL)
@@ -70,13 +74,15 @@ module Crawlers
               # Remove image when all products have its image updated.
               puts 'SEM IMAGEM' if product.image.blank?
               product.update(price: price,
-                             image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''))
+                             image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''),
+                             url: product_url)
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             # Remove this else when all products have its image updated.
             else
               puts 'SEM IMAGEM' if product.image.blank?
               # Carrefour had no images. Update this attribute.
-              product.update(image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''))
+              product.update(image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''),
+                             url: product_url)
             end
           else
             puts 'SEM IMAGEM' if product.image.blank?
@@ -86,7 +92,8 @@ module Crawlers
                                       price: price,
                                       image: (product_html.css('[itemprop=image]')[index].attr('data-src').strip rescue ''),
                                       market_name: 'carrefour',
-                                      market: CARREFOUR_MODEL)
+                                      market: CARREFOUR_MODEL,
+                                      url: product_url)
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,
@@ -96,10 +103,6 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
-      end
-
-      def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end

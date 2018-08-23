@@ -5,6 +5,7 @@ module Applications
                              'Ã£' => 'ã',
                              'Ã©' => 'é',
                              'Ãª' => 'ê',
+                             'Ã­'  => 'í', # THERE IS A HIDDEN CHARACTER HERE, AFTER Ã
                              'Ã³' => 'ó',
                              'Ã´' => 'ô',
                              'Ãº' => 'ú',
@@ -14,6 +15,14 @@ module Applications
     class << self
       def treat_injuries
         fix_wrong_encoding_characters
+      end
+
+      def treat_product_name(product_name)
+        ENCODING_EQUIVALENTS.keys.each do |char|
+          product_name.gsub!(char, ENCODING_EQUIVALENTS[char])
+        end
+
+        product_name
       end
 
       private

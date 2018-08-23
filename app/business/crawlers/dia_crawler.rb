@@ -55,6 +55,10 @@ module Crawlers
           break if price.zero?
           next if include_wrong_encoding_chars?(product_name)
 
+          # Fix product name if it has wrong encoding
+          # So it is not added again in the database
+          product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
+
           # Product already exists in database
           if DIA_PRODUCTS.include?(product_name)
             product = Product.find_by(name: product_name, market: DIA_MODEL)
@@ -67,8 +71,11 @@ module Crawlers
                                               current_price: price,
                                               product: product)
 
-              product.update(price: price)
+              product.update(price: price,
+                             url: "#{DIA_BASE_URL}#{product_url}")
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
+            else
+              product.update(url: "#{DIA_BASE_URL}#{product_url}")
             end
           else
             # This is a new product
@@ -77,7 +84,8 @@ module Crawlers
                                       price: price,
                                       image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
                                       market_name: 'dia',
-                                      market: DIA_MODEL)
+                                      market: DIA_MODEL,
+                                      url: "#{DIA_BASE_URL}#{product_url}")
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,
@@ -87,10 +95,6 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
-      end
-
-      def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end

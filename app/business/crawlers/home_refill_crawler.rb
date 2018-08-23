@@ -51,10 +51,15 @@ module Crawlers
         category.css('.column .molecule-new-product-card .row.uncollapse').each do |product|
           product_name = product.css('h3').text().strip
           price = product.css('.molecule-new-product-card__price').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          product_url = product.css('.column.small-16.small-order-1 a').attr('href').value.strip
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
           next if include_wrong_encoding_chars?(product_name)
+
+          # Fix product name if it has wrong encoding
+          # So it is not added again in the database
+          product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
           # Product already exists in database
           if HOME_REFILL_PRODUCTS.include?(product_name)
@@ -68,8 +73,11 @@ module Crawlers
                                               current_price: price,
                                               product: product)
 
-              product.update(price: price)
+              product.update(price: price,
+                             url: product_url)
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
+            else
+              product.update(url: product_url)
             end
           else
             # This is a new product
@@ -78,7 +86,8 @@ module Crawlers
                                       price: price,
                                       image: (product.css('.atom-product-image img').attr('src').text().strip rescue ''),
                                       market_name: 'home_refill',
-                                      market: HOME_REFILL_MODEL)
+                                      market: HOME_REFILL_MODEL,
+                                      url: product_url)
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,
@@ -88,10 +97,6 @@ module Crawlers
             puts "NOVO PRODUTO: #{product.name} -> #{product.price} "
           end
         end
-      end
-
-      def include_wrong_encoding_chars?(product_name)
-        wrong_encoding_chars.any? { |word| product_name.include?(word) }
       end
     end
   end
