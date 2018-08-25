@@ -1,5 +1,8 @@
 module Crawlers
   class ApplicationCrawler
+    require 'nokogiri'
+    require 'open-uri'
+
     class << self
       def wrong_encoding_chars
         ["\u0081", "\u0083O", "\u0089", "\u0094", "\u0093"]
