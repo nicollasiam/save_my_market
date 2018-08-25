@@ -48,10 +48,10 @@ module Crawlers
       private
 
       def loop_through_category(category)
-        category.css('.column .molecule-new-product-card .row.uncollapse').each do |product|
-          product_name = product.css('h3').text().strip
-          price = product.css('.molecule-new-product-card__price').text().gsub('R$', '').gsub(',', '.').strip.to_f
-          product_url = product.css('.column.small-16.small-order-1 a').attr('href').value.strip
+        category.css('.column .molecule-new-product-card .row.uncollapse').each do |product_html|
+          product_name = product_html.css('h3').text().strip
+          price = product_html.css('.molecule-new-product-card__price').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          product_url = product_html.css('.column.small-16.small-order-1 a').attr('href').value.strip
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
@@ -67,7 +67,7 @@ module Crawlers
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.last.current_price != price
+            if product.price_histories.order(created_at: :asc).last.current_price != price
               # if it changed, create a new price history and add it to the product
               new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
@@ -84,7 +84,7 @@ module Crawlers
             # add it to the database
             product = Product.create(name: product_name,
                                       price: price,
-                                      image: (product.css('.atom-product-image img').attr('src').text().strip rescue ''),
+                                      image: (product_html.css('.atom-product-image img').attr('src').text().strip rescue ''),
                                       market_name: 'home_refill',
                                       market: HOME_REFILL_MODEL,
                                       url: product_url)

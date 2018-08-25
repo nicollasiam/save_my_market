@@ -46,9 +46,9 @@ module Crawlers
       private
 
       def loop_through_category(category)
-        category.css('.product').each do |product|
-          product_name = product.css('.product--info .tit').text().strip
-          price = product.css('.product--info .price').text().strip.gsub(',', '.').to_f
+        category.css('.product').each do |product_html|
+          product_name = product_html.css('.product--info .tit').text().strip
+          price = product_html.css('.product--info .price').text().strip.gsub(',', '.').to_f
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
@@ -64,27 +64,27 @@ module Crawlers
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.last.current_price != price
+            if product.price_histories.order(created_at: :asc).last.current_price != price
               # if it changed, create a new price history and add it to the product
               new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
                                               product: product)
 
               product.update(price: price,
-                             url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
+                             url: "#{SONDA_BASE_URL}#{product_html.css('[itemprop=url]').attr('href').value.strip}")
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             else
-              product.update(url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
+              product.update(url: "#{SONDA_BASE_URL}#{product_html.css('[itemprop=url]').attr('href').value.strip}")
             end
           else
             # This is a new product
             # add it to the database
             product = Product.create(name: product_name,
                                       price: price,
-                                      image: (product.css('.lnk img').attr('src').value().strip rescue ''),
+                                      image: (product_html.css('.lnk img').attr('src').value().strip rescue ''),
                                       market_name: 'sonda',
                                       market: SONDA_MODEL,
-                                      url: "#{SONDA_BASE_URL}#{product.css('[itemprop=url]').attr('href').value.strip}")
+                                      url: "#{SONDA_BASE_URL}#{product_html.css('[itemprop=url]').attr('href').value.strip}")
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,

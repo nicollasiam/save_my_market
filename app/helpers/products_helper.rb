@@ -43,14 +43,14 @@ module ProductsHelper
 
   def weekly_villains
     products = Product.where('week_variation < 200')
-                      .where.not(market: Market.find_by(name: 'Carrefour'))
                       .order(week_variation: :desc)
                       .limit(10)
+                      #.where.not(market: Market.find_by(name: 'Carrefour'))
   end
 
   def weekly_heroes
-    products = Product.where.not(market: Market.find_by(name: 'Carrefour'))
-                      .order(week_variation: :asc)
+    products = Product.order(week_variation: :asc)
                       .limit(10)
+                      #.where.not(market: Market.find_by(name: 'Carrefour'))
   end
 end

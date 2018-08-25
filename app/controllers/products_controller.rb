@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
     @product = Product.friendly.find(params[:id])
 
     @data = {
-      labels: @product.price_histories.map { |date| date.created_at.strftime('%d/%m/%Y') },
+      labels: @product.price_histories.order(created_at: :asc).map { |date| date.created_at.strftime('%d/%m/%Y') },
       datasets: [
         {
           label: "Preços",

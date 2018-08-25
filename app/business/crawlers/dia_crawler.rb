@@ -46,10 +46,10 @@ module Crawlers
       def loop_through_category(category)
         category.css('a.shelf-url').each do |element|
           product_url = element.attr('href')
-          product = Nokogiri::HTML(open("#{DIA_BASE_URL}#{product_url}"))
+          product_html = Nokogiri::HTML(open("#{DIA_BASE_URL}#{product_url}"))
 
-          product_name = product.css('h1.nameProduct').text().strip
-          price = product.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f
+          product_name = product_html.css('h1.nameProduct').text().strip
+          price = product_html.css('.line.price-line p.bestPrice span.val').text().gsub('R$', '').gsub(',', '.').strip.to_f
 
           # If the price is zero, this and next products are not availble anymore
           break if price.zero?
@@ -65,7 +65,7 @@ module Crawlers
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.last.current_price != price
+            if product.price_histories.order(created_at: :asc).last.current_price != price
               # if it changed, create a new price history and add it to the product
               new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
@@ -82,7 +82,7 @@ module Crawlers
             # add it to the database
             product = Product.create(name: product_name,
                                       price: price,
-                                      image: (product.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
+                                      image: (product_html.css('#list-thumbs').first.css('a').attr('href').value rescue ''),
                                       market_name: 'dia',
                                       market: DIA_MODEL,
                                       url: "#{DIA_BASE_URL}#{product_url}")
