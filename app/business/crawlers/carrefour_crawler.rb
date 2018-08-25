@@ -69,7 +69,7 @@ module Crawlers
 
             # check if price changed
             # do nothing if it did not
-            if product.price_histories.order(created_at: :asc).last.current_price != price
+            if product.price != price
               # if it changed, create a new price history and add it to the product
               new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
                                               current_price: price,
@@ -89,7 +89,6 @@ module Crawlers
                              url: product_url)
             end
           else
-            puts 'SEM IMAGEM' if product.image.blank?
             # This is a new product
             # add it to the database
             product = Product.create(name: product_name,
