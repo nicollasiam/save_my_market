@@ -7,9 +7,6 @@ module Crawlers
       CARREFOUR_MODEL = Market.find_by(name: 'Carrefour')
       CARREFOUR_PRODUCTS = CARREFOUR_MODEL.products.pluck(:name)
 
-      require 'nokogiri'
-      require 'open-uri'
-
       class << self
         def execute
           @products = []
