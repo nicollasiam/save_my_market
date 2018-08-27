@@ -1,20 +1,21 @@
 module Crawlers
-  module Dia
+  module HomeRefill
     class UpdateCrawler < Crawlers::ApplicationCrawler
-      DIA_PRODUCTS = Product.where(market_name: 'dia')
+      HOME_REFILL_PRODUCTS = Product.where(market_name: 'home_refill')
 
       class << self
         def execute
-          update_dia_products
+          update_home_refill_products
         end
 
         private
 
-        def update_dia_products
-          DIA_PRODUCTS.each do |product_model|
+        def update_home_refill_products
+          HOME_REFILL_PRODUCTS.each do |product_model|
             begin
               product_html = Nokogiri::HTML(open(product_model.url))
-              price = product_html.css('.line.price-line p.bestPrice span.val')
+
+              price = product_html.css('.molecule-product-featured__price')
                                   .text.gsub('R$', '').gsub(',', '.')
                                   .strip.to_f
 
@@ -32,7 +33,7 @@ module Crawlers
             rescue
               # TODO: Implement availability attribute
               # NOTE: THERE IS NOT YET A WAY TO CHECK
-              # THE PRODUCT AVAILABILITY AT DIA
+              # THE PRODUCT AVAILABILITY AT home_refill
               puts "URL ZUADA: #{product_model.name} (#{product_model.market.name})"
             end
           end
