@@ -1,5 +1,6 @@
 module Crawlers
-  class MamboCrawler < ApplicationCrawler
+  module Mambo
+    class RegistrationCrawler < ApplicationCrawler
     # Mambo uses vtex, which makes everything weird
     # Its harder to access html AND api calls
     # This is because I derectly got the weird categories urls
@@ -8,9 +9,6 @@ module Crawlers
     MAMBO_PRODUCTS = MAMBO_MODEL.products.pluck(:name)
 
     MAMBO_API = 'https://www.mambo.com.br/api/catalog_system/pub/products/search/?fq=productId:'.freeze
-
-    require 'nokogiri'
-    require 'open-uri'
 
     class << self
       def execute
@@ -58,28 +56,9 @@ module Crawlers
           # Fix product name if it has wrong encoding
           # So it is not added again in the database
           product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
-
-          # Product already exists in database
-          if MAMBO_PRODUCTS.include?(product_name)
-            product = Product.find_by(name: product_name, market: MAMBO_MODEL)
-
-            # check if price changed
-            # do nothing if it did not
-            if product.price != price
-              # if it changed, create a new price history and add it to the product
-              new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
-                                              current_price: price,
-                                              product: product)
-
-              product.update(price: price,
-                             url: product_url.attr('data-url'))
-              puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
-            else
-              product.update(url: product_url.attr('data-url'))
-            end
-          else
-            # This is a new product
-            # add it to the database
+          # Product is not in database
+          unless MAMBO_PRODUCTS.include?(product_name)
+            # Add it to the database
             product = Product.create(name: product_name,
                                       price: price,
                                       image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
@@ -122,6 +101,7 @@ module Crawlers
           'https://www.mambo.com.br/buscapagina?fq=C%3a%2f154%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=',
           # petshop
           'https://www.mambo.com.br/buscapagina?fq=C%3a%2f134%2f&PS=20&sl=ac97b6b4-d928-4c37-a6bb-794c42ce6ba6&cc=20&sm=0&PageNumber=']
+        end
       end
     end
   end
