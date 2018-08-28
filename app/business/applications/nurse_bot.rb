@@ -8,6 +8,7 @@ module Applications
                              'Ã­'  => 'í', # THERE IS A HIDDEN CHARACTER HERE, AFTER Ã
                              'Ã³' => 'ó',
                              'Ã´' => 'ô',
+                             'Ãµ' => 'õ',
                              'Ãº' => 'ú',
                              'Ã§' => 'ç'
                            }

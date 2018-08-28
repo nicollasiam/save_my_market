@@ -13,7 +13,7 @@ module Crawlers
       end
 
       def sick_encoding_chars
-        ['Ã¡', 'Ã¢', 'Ã£', 'Ã©', 'Ãª', 'Ã­', 'Ã³', 'Ã´', 'Ãº', 'Ã§']
+        ['Ã¡', 'Ã¢', 'Ã£', 'Ã©', 'Ãª', 'Ã­', 'Ã³', 'Ã´', 'Ãµ', 'Ãº', 'Ã§']
       end
 
       def is_sick?(product_name)
