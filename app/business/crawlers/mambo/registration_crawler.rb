@@ -1,3 +1,7 @@
+# Mambo is problematic to split into registration and update crawler
+# Due to the way the page is loaded.
+# So, for Mambo, I'll keep only one crawler.
+
 module Crawlers
   module Mambo
     class RegistrationCrawler < ApplicationCrawler
@@ -56,9 +60,26 @@ module Crawlers
           # Fix product name if it has wrong encoding
           # So it is not added again in the database
           product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
-          # Product is not in database
-          unless MAMBO_PRODUCTS.include?(product_name)
-            # Add it to the database
+
+          # Product already exists in database            unless MAMBO_PRODUCTS.include?(product_name)
+          if MAMBO_PRODUCTS.include?(product_name)              # Add it to the database
+            product = Product.find_by(name: product_name, market: MAMBO_MODEL)
+             # check if price changed
+            # do nothing if it did not
+            if product.price != price
+              # if it changed, create a new price history and add it to the product
+              new_price = PriceHistory.create(old_price: product.price_histories.last.current_price,
+                                              current_price: price,
+                                              product: product)
+               product.update(price: price,
+                             url: product_url.attr('data-url'))
+              puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
+            else
+              product.update(url: product_url.attr('data-url'))
+            end
+          else
+            # This is a new product
+            # add it to the database
             product = Product.create(name: product_name,
                                       price: price,
                                       image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
