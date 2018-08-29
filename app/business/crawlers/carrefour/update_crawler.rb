@@ -33,13 +33,16 @@ module Crawlers
             rescue
               # TODO: Implement availability attribute
               # check if product is available
-              if product_html.css('.text-not-product-avisme').text.present?
-                # product_model.update(available: false)
-                puts "PRODUTO INDISPONÍVEL: #{product_model.name} (#{product_model.market.name})"
-              else
-                puts "URL ZUADA: #{product_model.name} (#{product_model.market.name})"
+              begin
+                if product_html.css('.text-not-product-avisme').text.present?
+                  # product_model.update(available: false)
+                  puts "PRODUTO INDISPONÍVEL: #{product_model.name} (#{product_model.market.name})"
+                else
+                  puts "URL ZUADA: #{product_model.name} (#{product_model.market.name})"
+                end
+              rescue
+                puts "ERRO INESPERADO"
               end
-
             end
           end
         end
