@@ -1,4 +1,16 @@
-- weekly_villains.each do |villain|
-  .row
-    .col-lg-12
-      = "#{villain.name} -> #{villain.week_variation}%"
+.row
+  .col-lg-12
+    .all-products
+      h2.text-center Vilões da semana
+
+      - weekly_villains.each do |villain|
+        .product.d-flex.justify-content-between.align-items-center
+          = image_tag villain.image, height: 50
+
+          .product-info.text-left
+            p.product-market = villain.market.name
+            span.product-name = link_to villain.name, market_product_path(villain.market, villain)
+
+          .product-percentage.villain.d-flex.justify-content-right.align-items-center
+            = icon('fas', 'long-arrow-alt-up')
+            span = "#{villain.week_variation.abs}%"

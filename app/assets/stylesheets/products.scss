@@ -20,3 +20,59 @@
     font-size: 2em;
   }
 }
+
+
+.all-products {
+  padding: 30px;
+  border: 1px solid orange;
+  border-radius: 8px;
+  margin-bottom: 80px;
+  color: rgba(0,0,0,.5);
+
+  h2 {
+    font-weight: 600;
+    padding-bottom: 20px
+  }
+
+  .product {
+    padding-bottom: 10px;
+    min-height: 80px;
+
+    .product-info {
+      width:100%;
+      padding-right: 15px;
+      padding-left: 15px;
+
+      .product-market {
+        font-weight: 600;
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+
+      .product-name {
+        font-size: 13px;
+
+        a {
+          color: rgba(0,0,0,.5);
+
+          &:hover {
+            text-decoration: none;
+            color: purple;
+          }
+        }
+      }
+    }
+
+    .product-percentage {
+      &.heroe {
+        color: green;
+        font-weight: 600;
+      }
+
+      &.villain {
+        color: red;
+        font-weight: 600;
+      }
+    }
+  }
+}
