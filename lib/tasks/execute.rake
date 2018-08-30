@@ -225,8 +225,8 @@ namespace :execute do
 
   desc 'Run all tasks'
   task run_all_tasks: [:environment,
-                       'execute:run_all_registrations_crawlers',
                        'execute:run_all_update_crawlers',
+                       'execute:run_all_registrations_crawlers',
                        'execute:clear_invalid_data',
                        'execute:fix_sick_data',
                        'execute:update_analisys_data',
