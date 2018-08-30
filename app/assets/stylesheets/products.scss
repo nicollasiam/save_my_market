@@ -64,14 +64,15 @@
     }
 
     .product-percentage {
+      font-weight: 600;
+      font-size: 16px;
+
       &.heroe {
         color: green;
-        font-weight: 600;
       }
 
       &.villain {
         color: red;
-        font-weight: 600;
       }
     }
   }
