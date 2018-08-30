@@ -54,8 +54,8 @@ module Crawlers
             # Fix product name if it has wrong encoding
             # So it is not added again in the database
             product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
-            # Product already exists in database
 
+            # Product already exists in database
             unless CARREFOUR_PRODUCTS.include?(product_name)
               # Add it to the database
               product = Product.create(name: product_name,

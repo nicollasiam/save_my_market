@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_22_233232) do
+ActiveRecord::Schema.define(version: 2018_08_29_233249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2018_08_22_233232) do
     t.decimal "month_variation", precision: 10, scale: 2
     t.decimal "week_variation", precision: 10, scale: 2
     t.string "url"
+    t.boolean "availability", default: true
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["market_id"], name: "index_products_on_market_id"
   end
