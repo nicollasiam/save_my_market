@@ -1,7 +1,3 @@
-// Place all the styles related to the products controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 // Show view
 .product-image {
   img {
@@ -18,9 +14,14 @@
   h2 {
     color: orange;
     font-size: 2em;
+    margin-bottom: 30px;
+  }
+
+  .market-name {
+    font-weight: 600;
+    color: #999999;
   }
 }
-
 
 .all-products {
   padding: 30px;
@@ -76,4 +77,8 @@
       }
     }
   }
+}
+
+.chart-tile {
+  margin-top: 30px;
 }

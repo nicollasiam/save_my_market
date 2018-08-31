@@ -10,23 +10,9 @@ class ProductsController < ApplicationController
     @market = Market.friendly.find(params[:market_id])
     @product = Product.friendly.find(params[:id])
 
-    @data = {
-      labels: @product.price_histories.order(created_at: :asc).map { |date| date.created_at.strftime('%d/%m/%Y') },
-      datasets: [
-        {
-          label: "Preços",
-          background_color: "rgba(220,220,220,0.2)",
-          border_color: "rgba(220,220,220,1)",
-          data: @product.price_histories.order(created_at: :asc).map(&:current_price)
-        }
-      ]
-    }
-
-    @options = {
-      lineTension: 0,
-      pointRadius: 2,
-      pointBackgroundColor: '#ffa500'
-    }
+    @data = @product.price_histories.order(created_at: :asc)
+                    .map { |data| [data.created_at.strftime('%d/%m/%Y'),
+                                   data.current_price] }
   end
 
   private

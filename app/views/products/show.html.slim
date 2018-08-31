@@ -7,39 +7,44 @@
     .offset-lg-1.col-lg-7
       .product-info
         .row
-          .col-lg-12.d-flex.align-items-center
+          .col-lg-12
             h1 = @product.name
-            = image_tag @product.market.logo, height: 40, width: 80
+            p.market-name = @product.market.name
+            / = image_tag @product.market.logo, height: 40, width: 80
         .row
           .col-lg-12.text-left
             h2 = format_currency(@product.price)
         .row
-          .col-lg-12
-            table.table
-              tbody
-                tr
-                  th Data de Cadastro
-                  td = registration_date(@product)
-                tr
-                  th Preço na data de cadastro
-                  td = format_currency(registration_price(@product))
-                tr
-                  th Menor Preço Histórico
-                  td = "#{format_currency(minimum_price(@product))} em #{minimum_price_date(@product)}"
-                tr
-                  th Maior Preço Histórico
-                  td = "#{format_currency(maximum_price(@product))} em #{maximum_price_date(@product)}"
-                tr
-                  th Variações de Preço desde cadastro
-                  td = @product.price_histories.count - 1
-                tr
-                  th Variação em uma semana
-                  td style=(week_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{week_variation(@product)}%"
-                tr
-                  th Variação em um mês
-                  td style=(month_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{month_variation(@product)}%"
+          .col-lg-6
+            strong Data de cadastro
+            p = registration_date(@product)
+          .col-lg-6
+            strong Preço na data de cadastro
+            p = format_currency(registration_price(@product))
+          .col-lg-6
+            strong Menor Preço Histórico
+            p = "#{format_currency(minimum_price(@product))} em #{minimum_price_date(@product)}"
+          .col-lg-6
+            strong Maior Preço Histórico
+            p = "#{format_currency(maximum_price(@product))} em #{maximum_price_date(@product)}"
+          .col-lg-6
+            strong Variação em uma semana
+            p style=(week_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{week_variation(@product)}%"
+          .col-lg-6
+            strong Variação em um mês
+            p style=(month_variation(@product) > 0 ? 'color: red' : 'color: green') = "#{month_variation(@product)}%"
+          .col-lg-6
+            strong Variações de Preço desde cadastro
+            p = @product.price_histories.count - 1
   .row
-    .col-lg-12
-      = line_chart @data, @options
+    .col-lg-12.text-center
+      h3.chart-tile Acompanhamento de preços
+      = line_chart @data, { curve: false,
+                            xtitle: 'Data da atualização',
+                            ytitle: 'Preço',
+                            prefix: 'R$ ',
+                            decimal: ',',
+                            colors: ['#551a8b'],
+                            id: 'price-chart' }
 
 
