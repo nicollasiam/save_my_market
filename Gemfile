@@ -49,7 +49,8 @@ gem 'kaminari'
 gem "breadcrumbs_on_rails"
 
 # Charts
-gem 'chartjs-ror'
+# gem 'chartjs-ror'
+gem 'chartkick'
 
 
 group :development, :test do
