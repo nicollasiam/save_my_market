@@ -16,12 +16,12 @@ class CategoriesController < ApplicationController
 
   def get_market_category_products
     @market = Market.friendly.find(params[:market_id])
-    @products = @category.products.where(market: @market)
+    @products = @category.products.available.where(market: @market)
   end
 
   def get_category_products
     @market = '0'
-    @products = @category.products
+    @products = @category.products.available
   end
 
   def order_products

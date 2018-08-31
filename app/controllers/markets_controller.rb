@@ -21,7 +21,7 @@ class MarketsController < ApplicationController
   end
 
   def get_products
-    @products = @market.products
+    @products = @market.products.available
 
     @products_count = @products.count
     order_products if params[:sort]

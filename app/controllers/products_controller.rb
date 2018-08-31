@@ -18,7 +18,8 @@ class ProductsController < ApplicationController
   private
 
   def get_products
-    @products = Product.where('lower(name) LIKE ?',
+    @products = Product.available
+                       .where('lower(name) LIKE ?',
                               "%#{params[:search].downcase}%")
 
     @products_count = @products.count
