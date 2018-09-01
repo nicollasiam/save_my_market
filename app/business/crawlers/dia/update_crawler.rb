@@ -16,7 +16,7 @@ module Crawlers
               product_html = Nokogiri::HTML(open(product_model.url))
 
               # Update title
-              update_price(product_model, product_html)
+              update_title(product_model, product_html)
 
               # Update price
               update_price(product_model, product_html)

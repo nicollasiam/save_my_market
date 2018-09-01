@@ -31,7 +31,7 @@ module Crawlers
               end
 
               # Update title
-              update_price(product_model, product_html)
+              update_title(product_model, product_html)
 
               # Update price
               update_price(product_model, product_html)
