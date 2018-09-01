@@ -5,6 +5,15 @@ module Applications
         update_variations
       end
 
+      def week_variation(product)
+        week_price = (product.price_histories
+                             .order(created_at: :asc)
+                             .where('created_at >= ?', Time.zone.now - 1.week)
+                             .first.current_price rescue nil)
+
+        week_price.nil? ? 0.0 : (((product.price - week_price) * 100) / week_price).round(2)
+      end
+
       private
 
       def update_variations
@@ -21,15 +30,6 @@ module Applications
 
           update = false
         end
-      end
-
-      def week_variation(product)
-        week_price = (product.price_histories
-                             .order(created_at: :asc)
-                             .where('created_at >= ?', Time.zone.now - 1.week)
-                             .first.current_price rescue nil)
-
-        week_price.nil? ? 0.0 : (((product.price - week_price) * 100) / week_price).round(2)
       end
 
       def month_variation(product)
