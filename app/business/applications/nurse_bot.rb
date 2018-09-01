@@ -3,6 +3,7 @@ module Applications
     ENCODING_EQUIVALENTS = { 'Ã¡' => 'á',
                              'Ã¢' => 'â',
                              'Ã£' => 'ã',
+                             "Ã\u0082" => 'Â',
                              'Ã©' => 'é',
                              'Ãª' => 'ê',
                              'Ã­'  => 'í', # THERE IS A HIDDEN CHARACTER HERE, AFTER Ã
