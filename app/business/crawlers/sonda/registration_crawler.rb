@@ -60,7 +60,7 @@ module Crawlers
             # because after many tries
             # it seems to be the most uniq, error-free attribute
             # Product is not in database
-            if Product.where(url: product_product_url).empty?
+            if Product.where(url: product_url).empty?
               # Add it to the database
               product = Product.create(name: product_name,
                                         price: price,
