@@ -3,7 +3,6 @@ module Crawlers
     class RegistrationCrawler < ApplicationCrawler
       SONDA_BASE_URL = 'https://www.sondadelivery.com.br/'.freeze
       SONDA_MODEL = Market.find_by(name: 'Sonda')
-      SONDA_PRODUCTS = SONDA_MODEL.products.pluck(:name)
 
       class << self
         def execute
@@ -46,6 +45,7 @@ module Crawlers
         def loop_through_category(category)
           category.css('.product').each do |product_html|
             product_name = product_html.css('.product--info .tit').text().strip
+            product_url = "#{SONDA_BASE_URL}#{product_html.css('[itemprop=url]').attr('href').value.strip}"
             price = product_html.css('.product--info .price').text().strip.gsub(',', '.').to_f
 
             # If the price is zero, this and next products are not availble anymore
@@ -56,15 +56,18 @@ module Crawlers
             # So it is not added again in the database
             product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
-            # Product already exists in database
-            unless SONDA_PRODUCTS.include?(product_name)
+            # Look for url
+            # because after many tries
+            # it seems to be the most uniq, error-free attribute
+            # Product is not in database
+            if Product.where(url: product_product_url).empty?
               # Add it to the database
               product = Product.create(name: product_name,
                                         price: price,
                                         image: (product_html.css('.lnk img').attr('src').value().strip rescue ''),
                                         market_name: 'sonda',
                                         market: SONDA_MODEL,
-                                        url: "#{SONDA_BASE_URL}#{product_html.css('[itemprop=url]').attr('href').value.strip}")
+                                        url: product_url)
 
               # create the first price history
               new_price = PriceHistory.create(old_price: 0,

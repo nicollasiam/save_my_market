@@ -5,7 +5,6 @@ module Crawlers
       CARREFOUR_HOME_URL = 'https://www.carrefour.com.br/dicas/mercado'.freeze
 
       CARREFOUR_MODEL = Market.find_by(name: 'Carrefour')
-      CARREFOUR_PRODUCTS = CARREFOUR_MODEL.products.pluck(:name)
 
       class << self
         def execute
@@ -55,8 +54,11 @@ module Crawlers
             # So it is not added again in the database
             product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
-            # Product already exists in database
-            unless CARREFOUR_PRODUCTS.include?(product_name)
+            # Look for url
+            # because after many tries
+            # it seems to be the most uniq, error-free attribute
+            # Product is not in database
+            if Product.where(url: product_url).empty?
               # Add it to the database
               product = Product.create(name: product_name,
                                         price: price,

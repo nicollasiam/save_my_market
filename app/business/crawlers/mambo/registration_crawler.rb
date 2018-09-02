@@ -10,7 +10,6 @@ module Crawlers
     # This is because I derectly got the weird categories urls
     # so I could access directily
     MAMBO_MODEL = Market.find_by(name: 'Mambo')
-    MAMBO_PRODUCTS = MAMBO_MODEL.products.pluck(:name)
 
     MAMBO_API = 'https://www.mambo.com.br/api/catalog_system/pub/products/search/?fq=productId:'.freeze
 
@@ -51,6 +50,7 @@ module Crawlers
           product_hash = JSON.parse(Nokogiri::HTML(open("#{MAMBO_API}#{item_id}")))
 
           product_name = product_hash.first['productName']
+          product_url = product_url.attr('data-url')
           price = (product_hash.first['items'].first['unitMultiplier'].to_f *
                             product_hash.first['items'].first['sellers'].first['commertialOffer']['Installments'].first['Value'].to_f)
                             .round(2)
@@ -61,9 +61,14 @@ module Crawlers
           # So it is not added again in the database
           product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
-          # Product already exists in database            unless MAMBO_PRODUCTS.include?(product_name)
-          if MAMBO_PRODUCTS.include?(product_name)              # Add it to the database
+          # Look for url
+          # because after many tries
+          # it seems to be the most uniq, error-free attribute
+          # Product is in database
+          if Product.where(url: product_url).any?
+            # Add it to the database
             product = Product.find_by(name: product_name, market: MAMBO_MODEL)
+
              # check if price changed
             # do nothing if it did not
             if product.price != price
@@ -72,10 +77,10 @@ module Crawlers
                                               current_price: price,
                                               product: product)
                product.update(price: price,
-                             url: product_url.attr('data-url'))
+                             url: product_url)
               puts "PRODUTO ATUALIZADO. #{product.name}: #{product.price_histories.last.old_price} -> #{product.price_histories.last.current_price}"
             else
-              product.update(url: product_url.attr('data-url'))
+              product.update(url: product_url)
             end
           else
             # This is a new product
@@ -85,7 +90,7 @@ module Crawlers
                                       image: (product.css('[itemscope]').css('[itemprop=image]').attr('content').value().strip rescue ''),
                                       market_name: 'mambo',
                                       market: MAMBO_MODEL,
-                                      url: product_url.attr('data-url'))
+                                      url: product_url)
 
             # create the first price history
             new_price = PriceHistory.create(old_price: 0,

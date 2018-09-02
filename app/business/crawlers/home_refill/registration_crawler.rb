@@ -3,7 +3,6 @@ module Crawlers
     class RegistrationCrawler < ApplicationCrawler
       HOME_REFILL_BASE_URL = 'https://www.homerefill.com.br/'.freeze
       HOME_REFILL_MODEL = Market.find_by(name: 'Home Refill')
-      HOME_REFILL_PRODUCTS = HOME_REFILL_MODEL.products.pluck(:name)
 
       class << self
         def execute
@@ -59,8 +58,11 @@ module Crawlers
             # So it is not added again in the database
             product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
+            # Look for url
+            # because after many tries
+            # it seems to be the most uniq, error-free attribute
             # Product is not in database
-            unless HOME_REFILL_PRODUCTS.include?(product_name)
+            if Product.where(url: product_url).empty?
               # Add it to the database
               product = Product.create(name: product_name,
                                         price: price,

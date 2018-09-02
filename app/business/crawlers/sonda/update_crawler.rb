@@ -30,8 +30,8 @@ module Crawlers
                 next unless product_html.css('.noestoque').empty?
               end
 
-              # Update title
-              update_title(product_model, product_html)
+              # SONDA CANT UPDAT TITLE. IT MESSES AVERYTHING UP
+              # update_title(product_model, product_html)
 
               # Update price
               update_price(product_model, product_html)
