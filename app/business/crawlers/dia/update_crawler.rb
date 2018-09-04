@@ -36,7 +36,7 @@ module Crawlers
                               .text.gsub('R$', '').gsub(',', '.')
                               .strip.to_f
 
-          if product_model.price != price
+          if !price.zero? && product_model.price != price
             # if it changed, create a new price history and add it to the product
             new_price = PriceHistory.create(old_price: product_model.price,
                                             current_price: price,
@@ -54,7 +54,7 @@ module Crawlers
           # So it is not updated incorrectly
           product_name = Applications::NurseBot.treat_product_name(product_name) if is_sick?(product_name)
 
-          if product_model.name != product_name
+          if product_name.present? && product_model.name != product_name
             puts "NOME ATUALIZADO. #{product_model.name} -> #{product_name}"
 
             product_model.update(name: product_name)
