@@ -57,7 +57,7 @@ module Crawlers
                               .gsub('R$', '').gsub(',', '.')
                               .strip.to_f
 
-          if product_model.price != price
+          if product_model.price != price && !price.zero?
             # if it changed, create a new price history and add it to the product
             new_price = PriceHistory.create(old_price: product_model.price,
                                             current_price: price,
